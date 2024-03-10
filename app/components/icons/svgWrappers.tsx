@@ -1,4 +1,3 @@
-import { cx } from 'hono/css';
 import type { PropsWithChildren } from 'hono/jsx';
 
 type HeroiconsSvgWrapperProps = {
@@ -28,7 +27,6 @@ export const HeroiconsSvgWrapper = ({
 };
 
 type SnsSvgWrapperProps = {
-  children: PropsWithChildren;
   className?: string;
   fill?: string;
   'aria-label'?: string;
@@ -45,7 +43,7 @@ export const SnsSvgWrapper = ({
       xmlns='http://www.w3.org/2000/svg'
       role='img'
       viewBox='0 0 24 24'
-      className={cx('h-9 w-9 md:h-11 md:w-11', className)}
+      class={className}
       fill={fill}
       aria-label={ariaLabel}
     >

@@ -7,3 +7,7 @@
     font-family: 'Sawarabi Gothic', sans-serif;
   }
 }
+
+.h2-hover:hover a .hover-opacity {
+  opacity: 1;
+}
