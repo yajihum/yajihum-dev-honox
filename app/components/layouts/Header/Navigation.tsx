@@ -11,7 +11,7 @@ export const Navigation = () => {
         <SideBar />
       </div>
       <nav className='my-0.5 hidden items-end md:flex'>
-        <ul className='grid grid-cols-3 justify-items-center gap-4'>
+        <ul className='grid grid-cols-4 justify-items-center gap-4'>
           {navigationLinks.map((link) => {
             return (
               <li key={link.name}>

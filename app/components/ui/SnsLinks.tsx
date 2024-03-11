@@ -1,4 +1,4 @@
-import { SnsSvgWrapper, SvgPaths } from '../../icons';
+import { SnsSvgWrapper, SvgPaths } from '../icons';
 
 const snsLinks = [
   {

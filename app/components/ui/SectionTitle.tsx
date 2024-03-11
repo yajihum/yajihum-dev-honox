@@ -1,4 +1,4 @@
-import { H2WithId } from './H2WithId';
+import { H2WithId } from './H2';
 
 export const SectionTitle = ({
   id,

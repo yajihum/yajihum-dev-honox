@@ -1,14 +1,14 @@
 import { createRoute } from 'honox/factory';
-import { SnsLinks } from '../components/layouts/ui/SnsLinks';
+import { H2Centered, SnsLinks } from '../components';
 
 const greetingTitle = `This site is Yajihum's portfolio and blog site.`;
 
 export default createRoute((c) => {
   return c.render(
-    <div class='grid grid-cols-1 gap-36 py-14'>
+    <div class='grid grid-cols-1 gap-28 px-4 py-14 md:gap-36 md:px-0'>
       <section class='grid grid-cols-1 justify-items-center gap-10'>
         <div class='grid grid-cols-1 gap-2 whitespace-pre-wrap text-center font-semibold md:gap-6'>
-          <p class='text-2xl md:text-4xl'>Welcome!</p>
+          <p class='text-3xl md:text-4xl'>Welcome!</p>
           <p class='text-lg md:text-xl'>{greetingTitle}</p>
         </div>
         <img
@@ -20,24 +20,23 @@ export default createRoute((c) => {
         />
       </section>
       <section
-        class='grid grid-cols-1 place-items-stretch gap-14 text-center'
+        class='grid grid-cols-1 place-items-stretch gap-14'
         aria-label='About me'
+        aria-labelledby='about-me'
       >
-        <h2 class='text-3xl text-neutral-300/90'>
-          <span class='border-b border-neutral-300 py-2'>About me</span>
-        </h2>
+        <H2Centered id='about-me' title='About me' />
         <div class='flex flex-col gap-8'>
-          <div role='group' class='flex gap-4 items-start justify-center'>
-            <div class='relative w-9 h-9 bg-white rounded-full'>
+          <div role='group' class='flex items-start justify-center gap-4'>
+            <div class='relative h-8 w-8 rounded-full bg-white md:h-9 md:w-9'>
               <img
                 src='https://images.site.yajihum.dev/rorisu.png'
                 alt='Icon'
-                class='absolute top-0 left-0 w-full h-full rounded-full'
+                class='absolute top-0 left-0 h-full w-full rounded-full'
               />
             </div>
-            <p class='text-2xl'>yajihum / やじはむ</p>
+            <p class='text-lg md:text-2xl'>yajihum / やじはむ</p>
           </div>
-          <p class='flex flex-col gap-1.5'>
+          <p class='flex flex-col gap-1.5 text-center text-sm'>
             <span className='block'>
               {`I'm a frontend engineer working at `}
               <a
@@ -55,12 +54,11 @@ export default createRoute((c) => {
         </div>
       </section>
       <section
-        class='grid grid-cols-1 place-items-stretch gap-14 text-center'
+        class='grid grid-cols-1 place-items-stretch gap-14'
         aria-label='Links'
+        aria-labelledby='links'
       >
-        <h2 class='text-3xl text-neutral-300/90'>
-          <span class='border-b border-neutral-300 py-2'>Links</span>
-        </h2>
+        <H2Centered id='links' title='Links' />
         <SnsLinks />
       </section>
     </div>,
