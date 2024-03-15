@@ -64,13 +64,13 @@ export default function SideBar() {
     <>
       <button
         type='button'
-        className='flex justify-between items-center w-full bg-inherit text-white px-0 hover:bg-inherit'
+        className='flex w-full items-center justify-between bg-inherit px-0 text-white hover:bg-inherit'
         onClick={() => {
           setOpen(!open);
         }}
       >
         <HeroiconsSvgWrapper
-          className='h-6 w-6 text-emerald-400'
+          className='h-6 w-6 text-green-300'
           aria-label='メニューを開く'
         >
           {SvgPaths.humburger}

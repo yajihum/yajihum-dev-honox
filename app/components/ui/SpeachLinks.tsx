@@ -7,7 +7,7 @@ export const SpeachLinks = () => {
       {speakerDeckEmbeddings.map((speach) => (
         <div
           key={speach.title}
-          className='grid grid-cols-1 gap-4 rounded-lg border border-neutral-700 bg-neutral-800 p-3 md:justify-items-end md:p-4'
+          className='grid grid-cols-1 gap-4 rounded-lg border border-neutral-700 bg-neutral-900 p-3 md:justify-items-end md:p-4'
         >
           {speach.embedding}
           <section className='grid grid-cols-1 gap-2 text-neutral-200'>

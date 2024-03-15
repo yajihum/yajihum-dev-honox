@@ -3,7 +3,7 @@ import { Footer } from '../Footer';
 import Header from '../Header';
 
 const Container: FC = ({ children }) => {
-  return <div className='my-10'>{children}</div>;
+  return <div className='mt-10 mb-24'>{children}</div>;
 };
 
 export const Layout: FC = ({ children }) => {

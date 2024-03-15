@@ -28,7 +28,7 @@ export const WorksCards = () => {
       {works.map((work) => (
         <li
           key={work.name}
-          class='rounded-xl border border-neutral-700 bg-neutral-800 hover:bg-neutral-700'
+          class='rounded-xl border border-neutral-700 bg-neutral-900 hover:bg-neutral-800'
         >
           <a
             href={work.url}
@@ -46,13 +46,13 @@ export const WorksCards = () => {
             <section class='grid grid-cols-1 gap-6 p-4 text-center'>
               <section class='grid grid-cols-1 gap-1'>
                 <p class='font-bold text-lg'>{work.name}</p>
-                <p class='text-neutral-300 text-sm'>{work.description}</p>
+                <p class='text-neutral-400 text-sm'>{work.description}</p>
               </section>
               <ul class='flex justify-center gap-2'>
                 {work.technologies.map((technology) => (
                   <li
                     key={technology}
-                    class='rounded-md bg-neutral-50 px-2 py-1 font-bold text-black text-sm'
+                    class='rounded-md border px-2 py-1 font-bold text-sm dark:border-green-700 dark:text-green-300'
                   >
                     {technology}
                   </li>

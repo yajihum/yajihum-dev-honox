@@ -20,7 +20,11 @@
             "attributes": ["classList"],
             "functions": ["clsx", "cva", "tw", "cx"]
           }
-        }
+        },
+        "noConsole": "error"
+      },
+      "style": {
+        "useShorthandFunctionType": "off"
       }
     }
   },
