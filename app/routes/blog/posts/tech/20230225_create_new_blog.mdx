@@ -1,0 +1,129 @@
+---
+title: 'Astroで新しいブログサイトを作った'
+description: 'Next.jsのブログをAstroで作り直した'
+pubDate: '2023/02/25 16:00'
+tag: 'tech'
+icon: 'objects/159'
+---
+
+1 か月前くらいからブログ作り直したいなという気持ちが出てきたので、流行りの Astro で作り直すことにした。
+Next.js は SPA で Astro は MPA という大きな違いがあるのでユーザー体験がどれくらい違うのかであったり、Astro 独自のコードでの書きやすさや React との共存部分の使いやすさなどを色々見ていった。
+
+結論から言うと Next.js の方が良かったかなという感想だが、もちろん Astro の良いところもあったので、それも踏まえて今回のサイト作り全般をここに記しておこうと思う。
+
+## 技術スタック
+
+### フレームワーク
+
+- Astro
+  Astro Starter Kit: Blog から作成
+  内部では React を使用している
+
+### デザイン
+
+- Figma
+
+**スマホ**
+![Figma デザイン(スマホ)](https://images.site.yajihum.dev/images/2023/02/create_new_blog/figma_smartphone.png)
+
+**デスクトップ**
+![Figma デザイン(デスクトップ)](https://images.site.yajihum.dev/images/2023/02/create_new_blog/figma_desctop.png)
+
+- TailwindCSS
+- daisyUI
+  js レスの TailwindCSS コンポーネントライブラリー。今回導入してみて、js レスであるためスマホ用の Navigation ドロップダウンを Astro で `client:load`せずに動かせたりするのが良かった
+
+### Markdown
+
+- [zenn-markdown](https://zenn.dev/rorisutarou/articles/ec3871ec55693d)  
+  Zenn の UI が好きで、Next.js で Markdown パーサーとして使った時の使用感も気に入っていたので今回も導入したが、Astro では少し苦戦した。導入方法は上記の URL に書いてある
+
+### CMS
+
+- microCMS  
+  何の CMS を使おうか迷ったのだが、備忘録と言葉のメモに関しては通勤中などで手軽に記入できるものが良かったので、あまり労力がかからなさそうな日本語対応の CMS に絞り microCMS にした
+  使用感としては、無難に機能面は使いやすいし、UI もシンプルで良い感じ
+  スマホアプリが欲しい
+
+### OGP 画像生成
+
+- [Cloudinary](https://catnose.me/notes/cloudinary-dynamic-ogp-image)  
+  Next.js では`vercle/og`を使っていたのですが、Astro では SSR を導入するところから必要になるのでもっと手軽にできそうなものということで`Cloudinary`にした
+  結構簡単で、ベースの画像を用意してそれ用の URL が出来るのでその URL に title などのテキストを付与すれば動的に OGP 画像を生成出来ちゃう優れもの
+  ただ、フォントを本当は NotoSnasJP を使いたかったのだが無理そうなので Sawarabi にしている
+
+![yajium.dayのサイトのogp画像](https://images.site.yajihum.dev/images/2023/02/create_new_blog/ogp_image.png)
+
+### サーバー設定
+
+- Netlify
+  ホスティングは Netlify にした
+  UI とかパフォーマンスの確認とか諸々 Vercel の方が好きなのだが、この前個人開発した Poketto アプリで Usage が少なくなってきているので仕方なく
+
+- Google Domains
+  初めてドメインを取得してみた！Google だと安心だし、更新料も一定ということでこれに決めた
+  ドメイン名は`yajium.dev`と迷ったのだが、個人的にこのサイトは日記兼自分の紹介サイトみたいな感じにしたかったので`dev`にこだわらず`day`にした
+
+## Astro の良いところ
+
+### CSS が`<style>`を使って書ける
+
+例えば、こんな感じでコンポーネントのすぐ下に`<style>`タグを追加することで css を原始的に？書けるので直感的で分かりやすい
+中身は Tailwind を使っているのだけども
+
+```html :works.astro
+<BlankLayout title="{worksTitle}">
+  <div class="content">
+    <div class="head">
+      <h2>Works</h2>
+    </div>
+    <div class="cards">...</div>
+  </div>
+</BlankLayout>
+<style>
+  .head h2 {
+    @apply text-beige my-10 text-center text-4xl;
+  }
+  .cards {
+    @apply animate-slideIn mx-9 grid grid-cols-1 place-items-center lg:grid-cols-3 lg:gap-6;
+  }
+</style>
+```
+
+この CSS 部分もそうだが、Astro は本来書いている HTML に近く、JSX などのような少し癖のある構文を書く必要がない
+
+### Markdown のサポートが充実している
+
+Astro デフォルトで特にライブラリを追加で導入しなくてもページとして作れる
+特にすごいなと思ったのは、Astro v2 での新規機能の`Content Collections`で、`src/content`配下の md ファイルを自動取得して frontmatter 変数の安全な型検証を行い、md ファイルの情報を取得できる
+frontmatter の型検証で zod が利用されているのも良いなと思った
+
+https://docs.astro.build/en/guides/content-collections/
+
+この機能や Markdown パーサーなどもデフォルトで利用できるのでベースは整っている
+
+## Astro の微妙なところ
+
+### ページ遷移が遅い
+
+Astro というよりかは MPA の欠点であるが、ページ遷移の度にサーバーに HTML を取りに行っているので完全にページを表示できるまで 1.2 秒かかり、個人的にユーザー体験が良くないなと思った
+というのも SPA である Next.js のとき、サイトへの初回訪問時にページが表示されるまで多少時間がかかるはずだったが Astro と変わらないし、その後のページ遷移もサクサクいき気持ちがよかった
+
+Next.js で作ったブログは静的サイトとして基本作っていたのでやっていることは変わらないのだが、Astro よりページ間移動が速く、あのアプリっぽい挙動の方が自分は好きだなと思う
+
+というか Next.js を完全に静的サイトとして使うのであれば結局ビルド時に HTML が生成されていて、サーバーへの通信は 1 回だけと考えてたら、毎回サーバーへ取りに行っている Astro よりも速いのは当然ではないか？
+
+### JS が使いづらい
+
+普通の JS を書きたいなと思った時にコンポーネントに`client:load`を付ける必要があるし、SSR するには`astro.config.mjs`で全ページを SSR 設定にしてから SSG にしたいページには決まったコードを追加しなければいけなかったり、使い勝手が悪い
+そもそも Astro 自体が静的コンテンツ重視のサイト作りに適するといっているので JS をゴリゴリ使う前提ではないのだが、静的サイトといってもハンバーガーメニューのドロップダウンや CMS との連携など JS や SSR を使いたいときは出てくる
+
+制約が多いし、使い勝手が微妙というのが正直な感想である
+
+## 今後追加したい機能
+
+- 目次
+- Blog いいね機能
+- Blog の無限スクロールかページネーション
+- タグ検索
+- サイト内検索

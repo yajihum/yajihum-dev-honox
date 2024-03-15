@@ -1,0 +1,295 @@
+---
+title: 'Cloudflare WorkersのHTMLRewriterを使ってリンクカードを実装する'
+description: ''
+pubDate: '2023/12/14 0:23'
+tag: 'tech'
+icon: 'smilieys/39'
+---
+
+最近Cloudflareを触ってみるのが楽しく、色々試しています。例えばこのサイトはCloudflare Pagesでホストし、記事の下にある絵文字スタンプもWorkers KVを使っています。
+また、最近Honoも熱く、Workersと一緒に使ってみようと思い、Cloudflare WorkersのHTMLRewriter + Honoで記事にあるリンクをカードにして表示できるものを作りました。
+
+## 目次
+
+## 参考にしたもの
+
+以下の記事を参考に一通り実装してみます。
+
+https://zenn.dev/uyas/articles/0b7dcbb46d8031
+
+HTMLRewriter自体はWorkers上で動くHTMLパーサーで、例えばサイトの古いリンクを新しいものへと動的に書き換えたりすることができるものです。
+
+https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/
+
+今回、リンクカードを作るのに必要なリンク先の情報は以下です。
+
+- title
+- favicon URL
+- meta description
+
+これらの情報を取得するために、本来の用途とは違いますがリンク先のHTMLを解析して該当のタグに対する情報を取得します。
+
+## Honoのインストール
+
+Workersアプリケーションを作成するために、Honoというフレームワークを使用します。
+
+https://hono.dev/getting-started/cloudflare-workers
+
+上記に書いてある手順の通り以下を行います。
+
+1. プロジェクトのルートで`npm create hono@latest linkcard`のコマンドを実行
+2. `cd linkcard`でプロジェクトに移動
+3. `npm i`で依存関係をインストール
+
+## 実装する
+
+準備は整ったので、`index.ts`ファイルを以下のようにして実装します。
+
+```ts :src/index.ts
+import { Hono } from 'hono';
+
+const app = new Hono();
+
+class TitleHandler {
+  title: string;
+
+  constructor() {
+    this.title = '';
+  }
+
+  text(text: Text) {
+    if (!this.title && text.text) {
+      this.title = text.text;
+    }
+  }
+}
+
+class OgpHandler {
+  title: string;
+  description: string;
+
+  constructor() {
+    this.title = '';
+    this.description = '';
+  }
+
+  element(element: Element) {
+    if (element.getAttribute('name') === 'description') {
+      this.description = element.getAttribute('content') ?? '';
+      return;
+    }
+
+    const property = element.getAttribute('property');
+
+    if (property === 'og:title') {
+      this.title = element.getAttribute('content') ?? '';
+    } else if (property === 'og:description') {
+      this.description = element.getAttribute('content') ?? '';
+    }
+  }
+}
+
+class FaviconHandler {
+  faviconUrl: string;
+
+  constructor() {
+    this.faviconUrl = '';
+  }
+
+  element(element: Element) {
+    if (
+      element.getAttribute('rel') === 'icon' ||
+      element.getAttribute('rel') === 'shortcut icon'
+    ) {
+      this.faviconUrl = element.getAttribute('href') ?? '';
+    }
+  }
+}
+
+const hasValidPrefix = (url: string) =>
+  ['http', 'https', 'data'].some((prefix) => url.startsWith(prefix));
+
+app.get('/api/linkCard', async (c) => {
+  const url = c.req.query('url');
+  if (url === undefined) {
+    return c.body('Bad Request', 400);
+  }
+
+  const parsedUrl = new URL(url);
+  const decodedHref = decodeURIComponent(url);
+  const siteRes = await fetch(decodedHref);
+  if (!siteRes.ok) {
+    return c.body('Not Found', 404);
+  }
+
+  const titleHandler = new TitleHandler();
+  const ogpHandler = new OgpHandler();
+  const faviconHandler = new FaviconHandler();
+  const res = new HTMLRewriter()
+    .on('title', titleHandler)
+    .on('meta', ogpHandler)
+    .on('link', faviconHandler)
+    .transform(siteRes);
+  await res.text();
+
+  const days = 24 * 60 * 60;
+  c.header('Cache-Control', `public, s-maxage=${1 * days}`);
+
+  return c.json({
+    title: titleHandler.title ?? ogpHandler.title,
+    description: ogpHandler.description,
+    siteName: parsedUrl.hostname,
+    faviconUrl: hasValidPrefix(faviconHandler.faviconUrl)
+      ? faviconHandler.faviconUrl
+      : `${parsedUrl.origin}${faviconHandler.faviconUrl}`,
+  });
+});
+
+export default app;
+```
+
+一つずつ見ていきます。
+
+まず、`/api/linkCard`というルートを作成し、`https://xxxxxxx.workers.dev/api/linkCard`でこのWorkerにアクセスできるようにルーティングを設定します。  
+特定のリンク先の情報を取得したいので、`https://xxxxxxx.workers.dev/api/linkCard?url=https://yyyy.com/zzz`のようなリクエストを受け取るようにします。
+
+urlの値をc.req.queryで取得し、そのURLをもとにURL型のインスタンスを作成します。
+
+```ts
+app.get('/api/linkCard', async (c) => {
+  const url = c.req.query('url');
+  if (url === undefined) {
+    return c.body('Bad Request', 400);
+  }
+
+  const parsedUrl = new URL(url);
+  const decodedHref = decodeURIComponent(url);
+  const siteRes = await fetch(decodedHref);
+  if (!siteRes.ok) {
+    return c.body('Not Found', 404);
+  }
+...
+```
+
+ここからHTMLRewriterを使っていきます。  
+基本的に1つのタグ要素に対して1つのHandlerを作成する必要があり、今回は title,favicon URL,meta description の3つ分作ります。
+
+```ts
+class TitleHandler {
+  title: string;
+
+  constructor() {
+    this.title = '';
+  }
+
+  text(text: Text) {
+    if (!this.title && text.text) {
+      this.title = text.text;
+    }
+  }
+}
+
+class OgpHandler {
+  title: string;
+  description: string;
+
+  constructor() {
+    this.title = '';
+    this.description = '';
+  }
+
+  element(element: Element) {
+    if (element.getAttribute('name') === 'description') {
+      this.description = element.getAttribute('content') ?? '';
+      return;
+    }
+
+    const property = element.getAttribute('property');
+
+    if (property === 'og:title') {
+      this.title = element.getAttribute('content') ?? '';
+    } else if (property === 'og:description') {
+      this.description = element.getAttribute('content') ?? '';
+    }
+  }
+}
+
+class FaviconHandler {
+  faviconUrl: string;
+
+  constructor() {
+    this.faviconUrl = '';
+  }
+
+  element(element: Element) {
+    if (
+      element.getAttribute('rel') === 'icon' ||
+      element.getAttribute('rel') === 'shortcut icon'
+    ) {
+      this.faviconUrl = element.getAttribute('href') ?? '';
+    }
+  }
+}
+```
+
+`text`で受け取っているものはタグの中のテキストで、elementはタグ要素自体にアクセスし、属性を取得できたりします。
+
+そして、それぞれのHandlerをタグに結びつけ、リンク先のResponseをtransformします。
+
+```ts
+const titleHandler = new TitleHandler();
+const ogpHandler = new OgpHandler();
+const faviconHandler = new FaviconHandler();
+const res = new HTMLRewriter()
+  .on('title', titleHandler)
+  .on('meta', ogpHandler)
+  .on('link', faviconHandler)
+  .transform(siteRes);
+await res.text();
+```
+
+ここで最後、`await res.text()`しているのは、このHTMLRewriterはストリームベースなので欲しい情報を取得できないままレスポンスを返してしますからです。
+今回は、ブログの記事はStatic Generationをしておりビルド時にレンダリングされるのであまり頻繁にアクセスされるものではないという想定で、許容しています。
+
+あとはヘッダーにキャッシュをつけて、レスポンスを返すだけです。
+
+```ts
+const days = 24 * 60 * 60;
+c.header('Cache-Control', `public, s-maxage=${1 * days}`);
+
+return c.json({
+  title: titleHandler.title ?? ogpHandler.title,
+  description: ogpHandler.description,
+  siteName: parsedUrl.hostname,
+  faviconUrl: hasValidPrefix(faviconHandler.faviconUrl)
+    ? faviconHandler.faviconUrl
+    : `${parsedUrl.origin}${faviconHandler.faviconUrl}`,
+});
+```
+
+faviconのURLがhttpやhttps,dataから始まる場合はそのまま返し、そうでない場合はoriginをつけて返します。
+
+これで、APIの実装は完成です！
+
+## Workersにデプロイする
+
+CLoudflareのアカウントの作成、wranglerでのログインを済ませます（以下を参考）
+
+https://reffect.co.jp/html/cloudflare-workers#Cloudflare_Workers
+
+その後、以下のコマンドを実行すればデプロイ完了です！
+
+```
+npm run deploy
+```
+
+これで、コマンドに記載されているURLを通してAPIにアクセスできます。
+
+## パフォーマンス
+
+CloudflareのWorkersの詳細画面を見ると、CPU時間の中央値は5.1msなのでfreeプランの10ms以内をクリアしているので、ひとまずは大丈夫そうです
+
+## 終わりに
+
+かなり簡単にリンクカードの実装ができました！  
+リンクカードを実装する方法の1候補として参考にしていただけると幸いです🫡
