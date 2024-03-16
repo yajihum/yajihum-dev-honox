@@ -30,7 +30,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
         </div>
         <section className='grid grid-cols-1 justify-items-center gap-2 md:gap-4'>
           <h1 className='font-semibold text-xl md:text-3xl'>{title}</h1>
-          <div className='flex items-center gap-1 text-neutral-300 text-xs md:text-sm'>
+          <div className='flex items-center gap-1 text-neutral-500 dark:text-neutral-300 text-xs md:text-sm'>
             <HeroiconsSvgWrapper className='h-4 w-4'>
               {SvgPaths.calendar}
             </HeroiconsSvgWrapper>
@@ -52,7 +52,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
         >
           <SnsSvgWrapper
             fill='currentColor'
-            className='h-6 w-6 text-neutral-300 md:h-6 md:w-6 hover:text-neutral-100'
+            className='h-6 w-6 text-neutral-600 hover:text-neutral-700 dark:text-neutral-300 md:h-6 md:w-6 dark:hover:text-neutral-100'
           >
             {SvgPaths.x}
           </SnsSvgWrapper>
@@ -61,9 +61,9 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
           href={`https://github.com/yajihum/yajihum.dev/blob/main/src/posts/${tag}/${slug}.md`}
           target='_blank'
           rel='noopener noreferrer'
-          className='flex items-center gap-1.5 rounded-full border border-neutral-400 px-4 py-2 text-sm text-white hover:bg-neutral-800'
+          className='flex items-center gap-1.5 rounded-full border border-neutral-300 dark:border-neutral-400 px-4 py-2 text-sm text-neutral-600 dark:text-white bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700'
         >
-          <SnsSvgWrapper fill='#fff' className='h-5 w-5 md:h-5 md:w-5'>
+          <SnsSvgWrapper className='h-5 w-5 fill-neutral-700 dark:fill-white md:h-5 md:w-5'>
             {SvgPaths.github}
           </SnsSvgWrapper>
           GitHubで編集を提案

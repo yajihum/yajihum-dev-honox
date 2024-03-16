@@ -24,7 +24,7 @@ export default createRoute((c) => {
         aria-label='About me'
         aria-labelledby='about-me'
       >
-        <H2Centered id='about-me' title='About me' />
+        <H2Centered id='about-me' title='About Me' />
         <div class='flex flex-col gap-8'>
           <div role='group' class='flex items-start justify-center gap-4'>
             <div class='relative h-8 w-8 rounded-full bg-white md:h-9 md:w-9'>
@@ -41,7 +41,7 @@ export default createRoute((c) => {
               {`I'm a frontend engineer working at `}
               <a
                 href='https://qubena.com/'
-                className='text-green-300 hover:underline'
+                className='text-green-500 dark:text-green-300 hover:underline'
               >
                 COMPASS
               </a>

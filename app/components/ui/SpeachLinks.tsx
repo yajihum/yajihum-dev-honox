@@ -7,10 +7,10 @@ export const SpeachLinks = () => {
       {speakerDeckEmbeddings.map((speach) => (
         <div
           key={speach.title}
-          className='grid grid-cols-1 gap-4 rounded-lg border border-neutral-700 bg-neutral-900 p-3 md:justify-items-end md:p-4'
+          className='grid grid-cols-1 gap-4 rounded-lg border border-neutral-200 bg-neutral-100 p-3 md:justify-items-end dark:border-neutral-700 dark:bg-neutral-900 md:p-4'
         >
           {speach.embedding}
-          <section className='grid grid-cols-1 gap-2 text-neutral-200'>
+          <section className='grid grid-cols-1 gap-2 text-neutral-600 dark:text-neutral-200'>
             <a
               href={speach.speakerDeckUrl}
               target='_blank'
@@ -24,7 +24,7 @@ export const SpeachLinks = () => {
                 {SvgPaths.arrowUpRight}
               </HeroiconsSvgWrapper>
             </a>
-            <div className='flex items-center gap-1 text-neutral-300 md:justify-end'>
+            <div className='flex items-center gap-1 text-neutral-500 md:justify-end dark:text-neutral-300'>
               <HeroiconsSvgWrapper className='h-4 w-4'>
                 {SvgPaths.atSymbol}
               </HeroiconsSvgWrapper>

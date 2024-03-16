@@ -15,7 +15,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
         return (
           <article
             key={id}
-            className='rounded-xl border border-neutral-700 bg-neutral-900 hover:bg-neutral-800'
+            className='rounded-xl border border-neutral-200 bg-neutral-100 shadow-sm dark:border-neutral-700 dark:bg-neutral-900 hover:bg-neutral-50 hover:dark:bg-neutral-800'
           >
             <a
               href={`/blog/posts/${tag}/${slug}`}
@@ -30,7 +30,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
               </div>
               <div className='flex w-3/4 flex-col gap-2'>
                 <div className='flex flex-col gap-1.5'>
-                  <div className='flex items-center gap-1 text-neutral-300 text-xs'>
+                  <div className='flex items-center gap-1 text-neutral-500 text-xs dark:text-neutral-300'>
                     <HeroiconsSvgWrapper className='h-4 w-4'>
                       {SvgPaths.calendar}
                     </HeroiconsSvgWrapper>
@@ -40,7 +40,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
                     {module.frontmatter.title}
                   </p>
                 </div>
-                <p className='line-clamp-2 text-neutral-300 text-xs'>
+                <p className='line-clamp-2 text-neutral-500 text-xs dark:text-neutral-300'>
                   {module.frontmatter.description}
                 </p>
               </div>

@@ -17,7 +17,11 @@ export const Navigation = () => {
               <li key={link.name}>
                 <a
                   href={link.href}
-                  class={current === link.href ? 'text-green-300' : ''}
+                  class={
+                    current === link.href
+                      ? 'text-green-500 dark:text-green-300'
+                      : ''
+                  }
                 >
                   <p className='text-sm'>{link.name}</p>
                 </a>

@@ -2,8 +2,8 @@ import { Navigation } from './Navigation';
 
 export default function Header() {
   return (
-    <header className='sticky top-0 z-10 border-neutral-900 border-b py-3 backdrop-blur transition-colors dark:bg-neutral-800/60'>
-      <div className='mx-auto flex max-w-3xl items-center justify-between px-4 md:px-0'>
+    <header className='sticky top-0 z-10 border-neutral-200 border-b py-3 backdrop-blur transition-colors dark:border-neutral-900 dark:bg-neutral-800/60'>
+      <div className='mx-auto flex max-w-4xl items-center justify-between px-4 md:px-0'>
         <a href='/' className='hover:underline'>
           <h2 className='flex items-center gap-1.5 font-bold text-lg'>
             <img

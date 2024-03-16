@@ -1,4 +1,12 @@
-const works = [
+type Work = {
+  name: string;
+  url: string;
+  image: string;
+  description: string;
+  technologies: string[];
+};
+
+const works: Work[] = [
   {
     name: 'Microsoft 3D Emoji Picker',
     url: 'https://github.com/yajihum/microsoft-3d-emoji-picker',
@@ -28,7 +36,7 @@ export const WorksCards = () => {
       {works.map((work) => (
         <li
           key={work.name}
-          class='rounded-xl border border-neutral-700 bg-neutral-900 hover:bg-neutral-800'
+          class='rounded-xl shadow-lg dark:shadow-none border border-neutral-200 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800'
         >
           <a
             href={work.url}
@@ -52,7 +60,7 @@ export const WorksCards = () => {
                 {work.technologies.map((technology) => (
                   <li
                     key={technology}
-                    class='rounded-md border px-2 py-1 font-bold text-sm dark:border-green-700 dark:text-green-300'
+                    class='rounded-md bg-green-200/20 px-3 py-1 font-bold text-green-500 text-sm dark:bg-green-900/30 dark:text-green-300'
                   >
                     {technology}
                   </li>

@@ -1,4 +1,5 @@
 import pages from '@hono/vite-cloudflare-pages';
+import ssg from '@hono/vite-ssg';
 import mdx from '@mdx-js/rollup';
 import honox from 'honox/vite';
 import client from 'honox/vite/client';
@@ -9,6 +10,8 @@ import remarkGfm from 'remark-gfm';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import remarkToc from 'remark-toc';
 import { defineConfig } from 'vite';
+
+const entry = './app/server.ts';
 
 const rehypePrettyCodeOptions = {
   theme: 'ayu-dark',
@@ -29,6 +32,9 @@ export default defineConfig(({ mode }) => {
     };
   }
   return {
+    build: {
+      emptyOutDir: false,
+    },
     plugins: [
       honox(),
       pages(),
@@ -45,6 +51,7 @@ export default defineConfig(({ mode }) => {
           [rehypePrettyCode, rehypePrettyCodeOptions],
         ],
       }),
+      ssg({ entry }),
     ],
   };
 });
