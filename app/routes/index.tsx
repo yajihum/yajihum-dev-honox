@@ -8,7 +8,7 @@ export default createRoute((c) => {
     <div class='grid grid-cols-1 gap-28 px-4 py-14 md:gap-36 md:px-0'>
       <section class='grid grid-cols-1 justify-items-center gap-10'>
         <div class='grid grid-cols-1 gap-2 whitespace-pre-wrap text-center font-semibold md:gap-6'>
-          <p class='text-3xl md:text-4xl'>Welcome!</p>
+          <p class='text-3xl md:text-5xl'>Welcome!</p>
           <p class='text-lg md:text-xl'>{greetingTitle}</p>
         </div>
         <img

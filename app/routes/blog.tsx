@@ -24,13 +24,13 @@ export default createRoute((c) => {
           <h3 id='teach-posts' class='text-center text-xl'>
             Tech Posts
           </h3>
-          <PostLinks tag='tech' posts={Object.entries(techPosts)} />
+          <PostLinks tag='tech' posts={Object.entries(techPosts).reverse()} />
         </sectopn>
         <sectopn aria-labelledby='life-posts' class='grid grid-cols-1 gap-8'>
           <h3 id='life-posts' class='text-center text-xl'>
             Life Posts
           </h3>
-          <PostLinks tag='life' posts={Object.entries(lifePosts)} />
+          <PostLinks tag='life' posts={Object.entries(lifePosts).reverse()} />
         </sectopn>
       </div>
     </section>,
