@@ -9,5 +9,9 @@ export default createRoute((c) => {
         <SpeachLinks />
       </div>
     </section>,
+    {
+      title: 'Speach slides',
+      description: 'Speach slides that Yajihum has presented.',
+    },
   );
 });

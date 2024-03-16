@@ -34,5 +34,9 @@ export default createRoute((c) => {
         </sectopn>
       </div>
     </section>,
+    {
+      title: 'Blog',
+      description: 'Blog posts that Yajihum has written.',
+    },
   );
 });

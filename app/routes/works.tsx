@@ -7,5 +7,9 @@ export default createRoute((c) => {
       <H2Centered id='works' title='Works' />
       <WorksCards />
     </section>,
+    {
+      title: 'Works',
+      description: 'Works that Yajihum has created.',
+    },
   );
 });

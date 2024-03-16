@@ -47,16 +47,14 @@ const snsLinks: SnsLink[] = [
 
 export const SnsLinks = () => {
   return (
-    <ul className='mx-auto grid max-w-sm grid-cols-1 gap-2 md:max-w-4xl md:grid-cols-5 md:gap-3'>
+    <ul className='mx-auto grid max-w-sm grid-cols-1 gap-2 md:max-w-4xl md:grid-cols-5'>
       {snsLinks.map((link, index) => (
         <li key={link.name}>
           <a
             href={link.url}
             target='_blank'
             rel='noreferrer'
-            className={`flex gap-4 md:gap-3 hover:bg-neutral-100 dark:hover:bg-inherit ${
-              index === 3 ? 'py-2 pl-2 pr-4' : 'p-2'
-            } rounded-lg`}
+            className='flex gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-neutral-100'
           >
             <SnsSvgWrapper
               className={`h-10 w-10 md:h-11 md:w-11 rounded-md dark:bg-white p-1.5 ${link.fill}`}
@@ -64,10 +62,8 @@ export const SnsLinks = () => {
               {link.icon}
             </SnsSvgWrapper>
             <div className='grid grid-cols-1 text-left'>
-              <p className='text-sm'>{link.name}</p>
-              <p className='text-neutral-400 text-xs md:text-sm'>
-                {link.userName}
-              </p>
+              <p className='text-xs'>{link.name}</p>
+              <p className='text-neutral-400 text-xs'>{link.userName}</p>
             </div>
           </a>
         </li>

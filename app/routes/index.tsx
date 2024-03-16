@@ -62,5 +62,9 @@ export default createRoute((c) => {
         <SnsLinks />
       </section>
     </div>,
+    {
+      title: 'yajihum.dev',
+      description: "yajihum's portfolio and blog site.",
+    },
   );
 });

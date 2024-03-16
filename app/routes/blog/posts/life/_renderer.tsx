@@ -2,10 +2,10 @@ import { jsxRenderer } from 'hono/jsx-renderer';
 import { Post } from '../../../../components';
 
 export default jsxRenderer(({ children, Layout, frontmatter }) => {
-  const title = `${frontmatter?.title} | Blog Name`;
+  if (!frontmatter) throw new Error('frontmatter is required');
 
   return (
-    <Layout title={title} description={frontmatter?.description}>
+    <Layout title={frontmatter.title} description={frontmatter?.description}>
       <Post tag='life' frontmatter={frontmatter}>
         {children}
       </Post>
