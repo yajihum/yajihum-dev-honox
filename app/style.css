@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    font-family: 'Sawarabi Gothic', sans-serif;
-  }
+@font-face {
+  font-family: 'Sawarabi Gothic';
+  font-display: swap;
+  src: url('https://images.site.yajihum.dev/sawarabi.woff2') format('woff2');
 }
 
-.h2-hover:hover a .hover-opacity {
-  opacity: 1;
+html {
+  font-family: 'Sawarabi Gothic';
 }
