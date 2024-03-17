@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Sawarabi Gothic';
-  font-display: swap;
-  src: url('https://images.site.yajihum.dev/sawarabi.woff2') format('woff2');
-}
-
 html {
   font-family: 'Sawarabi Gothic', 'ui-sans-serif', 'system-ui', 'sans-serif';
 }

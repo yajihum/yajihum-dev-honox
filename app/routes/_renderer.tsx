@@ -2,7 +2,7 @@ import { Style } from 'hono/css';
 import { jsxRenderer } from 'hono/jsx-renderer';
 import { Script } from '../Script';
 import { Layout } from '../components/layouts/Layout';
-import { favicocnUrl, fontUrl, getOgImageUrl } from '../lib/meta';
+import { favicocnUrl, getOgImageUrl } from '../lib/meta';
 
 export default jsxRenderer(({ children, title, description }) => {
   return (
@@ -25,7 +25,16 @@ export default jsxRenderer(({ children, title, description }) => {
         ) : (
           <link href='/app/style.css' rel='stylesheet' />
         )}
-        <link rel='preload' href={fontUrl} as='font' crossorigin='anonymous' />
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossorigin='anonymous'
+        />
+        <link
+          href='https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap'
+          rel='stylesheet'
+        />
         <Script src='/app/client.ts' />
         <Style />
       </head>
