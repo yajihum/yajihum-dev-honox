@@ -36,8 +36,8 @@ type H2CenteredProps = {
 
 export const H2Centered = ({ title, id }: H2CenteredProps) => {
   return (
-    <h2 id={id} class='text-center text-2xl dark:text-neutral-200'>
-      <span class='border-neutral-600 dark:border-neutral-300 border-b py-2'>
+    <h2 id={id} class='text-center text-lg dark:text-neutral-200 md:text-2xl'>
+      <span class='border-neutral-600 border-b py-2 dark:border-neutral-300'>
         {title}
       </span>
     </h2>

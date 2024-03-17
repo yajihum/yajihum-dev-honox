@@ -57,12 +57,12 @@ export const SnsLinks = () => {
             className='flex gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-neutral-100'
           >
             <SnsSvgWrapper
-              className={`h-10 w-10 md:h-11 md:w-11 rounded-md dark:bg-white p-1.5 ${link.fill}`}
+              className={`h-11 w-11 rounded-md dark:bg-white p-1.5 ${link.fill}`}
             >
               {link.icon}
             </SnsSvgWrapper>
-            <div className='grid grid-cols-1 text-left'>
-              <p className='text-xs'>{link.name}</p>
+            <div className='grid grid-cols-1 items-center text-left'>
+              <p className='text-sm'>{link.name}</p>
               <p className='text-neutral-400 text-xs'>{link.userName}</p>
             </div>
           </a>

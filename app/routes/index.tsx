@@ -8,8 +8,10 @@ export default createRoute((c) => {
     <div class='grid grid-cols-1 gap-28 px-4 py-14 md:gap-36 md:px-0'>
       <section class='grid grid-cols-1 justify-items-center gap-10'>
         <div class='grid grid-cols-1 gap-2 whitespace-pre-wrap text-center font-semibold md:gap-6'>
-          <p class='text-3xl md:text-5xl'>Welcome!</p>
-          <p class='text-lg md:text-xl'>{greetingTitle}</p>
+          <p class='text-3xl md:text-5xl'>Welcome 👋</p>
+          <p class='text-lg text-neutral-500 dark:text-neutral-300/90 md:text-xl'>
+            {greetingTitle}
+          </p>
         </div>
         <img
           src='https://images.site.yajihum.dev/rorisu.png'
@@ -20,7 +22,7 @@ export default createRoute((c) => {
         />
       </section>
       <section
-        class='grid grid-cols-1 place-items-stretch gap-14'
+        class='grid grid-cols-1 place-items-stretch gap-10 md:gap-14'
         aria-label='About me'
         aria-labelledby='about-me'
       >
@@ -54,7 +56,7 @@ export default createRoute((c) => {
         </div>
       </section>
       <section
-        class='grid grid-cols-1 place-items-stretch gap-14'
+        class='grid grid-cols-1 place-items-stretch gap-10 md:gap-14'
         aria-label='Links'
         aria-labelledby='links'
       >
