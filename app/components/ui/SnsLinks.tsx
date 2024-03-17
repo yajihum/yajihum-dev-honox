@@ -47,7 +47,7 @@ const snsLinks: SnsLink[] = [
 
 export const SnsLinks = () => {
   return (
-    <ul className='mx-auto grid max-w-sm grid-cols-1 gap-2 md:max-w-4xl md:grid-cols-5'>
+    <ul className='mx-auto grid max-w-sm grid-cols-1 gap-2 md:max-w-4xl md:grid-cols-3'>
       {snsLinks.map((link, index) => (
         <li key={link.name}>
           <a
