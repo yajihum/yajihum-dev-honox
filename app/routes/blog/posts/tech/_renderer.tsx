@@ -1,5 +1,5 @@
 import { jsxRenderer } from 'hono/jsx-renderer';
-import { Post } from '../../../../components';
+import { Post } from '../../../../components/ui';
 
 export default jsxRenderer(({ children, Layout, frontmatter }) => {
   if (!frontmatter) throw new Error('frontmatter is required');

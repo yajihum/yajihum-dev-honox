@@ -20,23 +20,23 @@ const SideNavigation = ({ open, setOpen }: SideNavigationProps) => {
         <div
           onClick={() => setOpen(false)}
           onKeyUp={handleKeyUp}
-          className='fixed inset-0 min-h-screen bg-black bg-opacity-30  z-20'
+          className='fixed inset-0 z-20 min-h-screen bg-black bg-opacity-30'
         />
       )}
       <nav
         class={`${
           open ? 'fixed translate-x-0' : 'hidden translate-x-full'
-        } right-0 top-0 min-h-screen z-30 w-1/2 px-6 py-14 bg-neutral-200 dark:bg-neutral-900`}
+        }top-0 right-0 z-30 min-h-screen w-1/2 bg-neutral-200 px-6 py-14 dark:bg-neutral-900`}
       >
         <ul class='grid gap-10'>
           {navigationLinks.map((link) => (
             <li
               key={link.name}
-              class='border-b border-neutral-300 dark:border-neutral-500'
+              class='border-neutral-300 border-b dark:border-neutral-500'
             >
               <a
                 href={link.href}
-                class='flex justify-between items-center w-full bg-inherit text-neutral-600 dark:text-white px-0 py-2 hover:bg-inherit'
+                class='flex w-full items-center justify-between bg-inherit px-0 py-2 text-neutral-600 hover:bg-inherit dark:text-white'
               >
                 <div class='flex gap-2.5'>
                   <p class='text-right font-semibold'>{link.name}</p>
@@ -60,7 +60,7 @@ const SideNavigation = ({ open, setOpen }: SideNavigationProps) => {
   );
 };
 
-export default function SideBar() {
+export default function IslandSideBar() {
   const [open, setOpen] = useState(false);
 
   return (

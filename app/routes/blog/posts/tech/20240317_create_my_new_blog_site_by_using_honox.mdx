@@ -42,10 +42,15 @@ https://github.com/yajihum/yajihum-dev-honox
 - Reactで使える機能が限られている
   - React前提のライブラリは使えないことが多く、App Routerで作ったサイトよりすぐに実装できる機能は限られる
   - かといってReactを入れるとHonoXの良さがなくなってしまいそうなので、使わない方向で進めた
-- islandsコンポーネントがまだ不安定
-  - islandsコンポーネントの用のsciriptが読み込まれず例えばスマホ用のハンバーガーメニュをクリックしても反応しないなどが起きた
-  - しかし、以下のPRで修正されるので問題なさそう（現状はカスタムのScriptコンポーネントを作成し対応 ※[参考](https://yossy.dev/posts/honox-blog-created)）  
-    https://github.com/honojs/honox/pull/114
+- Islandsコンポーネントがまだ不安定
+  - Islandsコンポーネントの用のsciriptが読み込まれず例えばスマホ用のハンバーガーメニュをクリックしても反応しないなどが起きた
+  - ~しかし、以下のPRで修正されるので問題なさそう（現状はカスタムのScriptコンポーネントを作成し対応 ※[参考](https://yossy.dev/posts/honox-blog-created)）  
+    https://github.com/honojs/honox/pull/114~
+  - 2024/03/20 追記:
+    - 上記だと解決しなくて、どうやらroutes配下のページからIslandコンポーネントを直接インポートする形でないと`hasIslandsImport`がtureにならないためだった
+    - 例えばLayoutを\_renderer.tsxで読み込んで、その中でIslandコンポーネントを読み込むと直接インポートではないのでclientのscriptが読み込まれない
+    - つまりネストされたコンポーネントにあるIslandコンポーネントは対象外になっている
+    - すでに[Issueがあり](https://github.com/honojs/honox/issues/46)こちらで解決されるのを待つしかなさそう（自分で直せるかなとコードを見てみたけどあまり良い方法が思いつかなかった）
 
 ## 終わりに
 
@@ -57,4 +62,4 @@ P.S. ダークモードの他にライトモードのデザインも作ってみ
 ## 参考になったサイト
 
 - https://yossy.dev/posts/honox-blog-created
-- https://blog.berlysia.net/
+- https://blog.berlysia.net/entry/2024-02-14-honox

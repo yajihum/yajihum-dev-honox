@@ -1,5 +1,6 @@
 import { createRoute } from 'honox/factory';
-import { H2Centered, PostLinks } from '../components';
+
+import { H2Centered, PostLinks } from '../components/ui';
 import type { Meta } from '../types';
 
 export default createRoute((c) => {

@@ -1,5 +1,5 @@
 import { createRoute } from 'honox/factory';
-import { H2Centered, SnsLinks } from '../components';
+import { H2Centered, SnsLinks } from '../components/ui';
 
 const greetingTitle = `This site is Yajihum's portfolio and blog site.`;
 

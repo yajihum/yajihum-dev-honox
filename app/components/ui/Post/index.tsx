@@ -1,8 +1,8 @@
 import type { Child, FC } from 'hono/jsx';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { HeroiconsSvgWrapper, SnsSvgWrapper, SvgPaths } from '../..';
 import { emojiDomain } from '../../../lib/cloudflare';
 import type { Meta, Tag } from '../../../types';
+import { HeroiconsSvgWrapper, SnsSvgWrapper, SvgPaths } from '../../icons';
 import { PostContent } from './PostContent';
 
 type Props = {

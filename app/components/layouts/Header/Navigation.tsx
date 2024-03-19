@@ -1,15 +1,13 @@
+import type { FC } from 'hono/jsx';
 import { useRequestContext } from 'hono/jsx-renderer';
-import SideBar from '../../../islands/sideBar';
 import { navigationLinks } from './data';
 
-export const Navigation = () => {
+export const Navigation: FC = ({ children }) => {
   const c = useRequestContext();
   const current = c.req.path;
   return (
     <>
-      <div className='block md:hidden'>
-        <SideBar />
-      </div>
+      <div className='block md:hidden'>{children}</div>
       <nav className='my-0.5 hidden items-end md:flex'>
         <ul className='grid grid-cols-4 justify-items-center gap-4'>
           {navigationLinks.map((link) => {

@@ -1,5 +1,5 @@
 import { createRoute } from 'honox/factory';
-import { H2Centered, WorksCards } from '../components';
+import { H2Centered, WorksCards } from '../components/ui';
 
 export default createRoute((c) => {
   return c.render(
