@@ -1,6 +1,7 @@
 import { createRoute } from 'honox/factory';
 
 import { H2Centered, PostLinks } from '../components/ui';
+import { getPublishedPosts } from '../lib/blog';
 import type { Meta } from '../types';
 
 export default createRoute((c) => {
@@ -25,13 +26,13 @@ export default createRoute((c) => {
           <h3 id='teach-posts' class='text-center text-xl'>
             Tech Posts
           </h3>
-          <PostLinks tag='tech' posts={Object.entries(techPosts).reverse()} />
+          <PostLinks tag='tech' posts={getPublishedPosts(techPosts)} />
         </sectopn>
         <sectopn aria-labelledby='life-posts' class='grid grid-cols-1 gap-8'>
           <h3 id='life-posts' class='text-center text-xl'>
             Life Posts
           </h3>
-          <PostLinks tag='life' posts={Object.entries(lifePosts).reverse()} />
+          <PostLinks tag='life' posts={getPublishedPosts(lifePosts)} />
         </sectopn>
       </div>
     </section>,

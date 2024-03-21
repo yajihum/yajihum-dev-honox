@@ -3,6 +3,7 @@ export type Tag = 'tech' | 'life';
 export type Meta = {
   title: string;
   description?: string;
+  published: boolean;
   pubDate: string;
   tag: Tag;
   icon: string;
