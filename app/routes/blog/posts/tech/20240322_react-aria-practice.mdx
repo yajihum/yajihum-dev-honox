@@ -1,0 +1,77 @@
+---
+title: 'React Ariaを触ってみる'
+description: 'アクセシブルなコンポーネント作成を手助けしてくれるReact Ariaを使ってみた'
+published: false
+pubDate: '2024/03/22 21:10'
+tag: 'tech'
+icon: 'symbols/156'
+---
+
+React AriaはAdobeから提供されているReact向けのライブラリで、アクセシビリティを重視したコンポーネント作成を手助けしてくれるものです。
+今回はReact Ariaを触ってStorybook上で動かしてみます。
+
+## 目次
+
+## React Ariaとは
+
+React Ariaの特徴としては以下のようなものがあります。
+
+- ヘッドレスコンポーネント（スタイルやレイアウトを独自に提供しない）
+- アクセシブルなドラッグ＆ドロップ、キーボードによる複数選択などの高機能を実現
+- 全てのデバイスでのマウス、タッチ、キーボード、スクリーンリーダーのインタラクションを最適化する
+- i18n対応
+
+↓公式サイト  
+https://react-spectrum.adobe.com/react-aria/
+
+## Next.jsのプロジェクト作成
+
+まずはNext.jsのプロジェクトを作成します。
+CSSのスタイリングにはTailwind CSSを使います。
+
+```bash
+npx create-next-app react-aria-storybook
+```
+
+## Storybookの作成
+
+作成したプロジェクトでStorybookを導入します。
+
+```bash
+bunx storybook@latest init
+```
+
+https://storybook.js.org/docs/get-started/nextjs
+
+## React Ariaのインストール
+
+React Ariaは以下のようにインストールします。
+
+```bash
+bun add react-aria-components
+```
+
+## Buttonコンポーネントの作成
+
+まずは簡単なButtonコンポーネントを作成してみます。
+
+`src/app/components/Button.tsx`を作成し、以下のように記述します。
+
+```tsx
+'use client';
+
+import { Button as RACButton, type ButtonProps } from 'react-aria-components';
+
+export const Button = ({ children, ...props }: ButtonProps) => {
+  return (
+    <RACButton
+      {...props}
+      className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+    >
+      {children}
+    </RACButton>
+  );
+};
+```
+
+これが一番ベーシックなButtonコンポーネントです。
