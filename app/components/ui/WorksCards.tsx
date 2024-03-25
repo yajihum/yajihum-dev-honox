@@ -36,7 +36,7 @@ export const WorksCards = () => {
       {works.map((work) => (
         <li
           key={work.name}
-          class='rounded-xl shadow-lg dark:shadow-none border border-neutral-200 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800'
+          class='rounded-xl border border-zinc-200 bg-zinc-100 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 hover:bg-zinc-50 dark:shadow-none'
         >
           <a
             href={work.url}
@@ -54,7 +54,7 @@ export const WorksCards = () => {
             <section class='grid grid-cols-1 gap-6 p-4 text-center'>
               <section class='grid grid-cols-1 gap-1'>
                 <p class='font-bold text-lg'>{work.name}</p>
-                <p class='text-neutral-400 text-sm'>{work.description}</p>
+                <p class='text-sm text-zinc-400'>{work.description}</p>
               </section>
               <ul class='flex justify-center gap-2'>
                 {work.technologies.map((technology) => (

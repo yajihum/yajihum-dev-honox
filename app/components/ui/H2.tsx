@@ -9,7 +9,7 @@ type Props = {
 } & PropsWithChildren;
 
 export const H2WithId = ({ id, title, children, hasBorder = false }: Props) => {
-  const borderClass = hasBorder ? 'border-b border-neutral-700 py-3' : '';
+  const borderClass = hasBorder ? 'border-b border-zinc-700 py-3' : '';
   return (
     <h2
       id={id}
@@ -36,8 +36,8 @@ type H2CenteredProps = {
 
 export const H2Centered = ({ title, id }: H2CenteredProps) => {
   return (
-    <h2 id={id} class='text-center text-lg dark:text-neutral-200 md:text-2xl'>
-      <span class='border-neutral-600 border-b py-2 dark:border-neutral-300'>
+    <h2 id={id} class='text-center text-lg dark:text-zinc-200 md:text-2xl'>
+      <span class='border-zinc-600 border-b py-2 dark:border-zinc-300'>
         {title}
       </span>
     </h2>

@@ -14,7 +14,7 @@ import { defineConfig } from 'vite';
 const entry = './app/server.ts';
 
 const rehypePrettyCodeOptions = {
-  theme: 'ayu-dark',
+  theme: 'poimandres',
 };
 
 export default defineConfig(({ mode }) => {

@@ -30,7 +30,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
         </div>
         <section className='grid grid-cols-1 justify-items-center gap-2 md:gap-4'>
           <h1 className='font-semibold text-xl md:text-3xl'>{title}</h1>
-          <div className='flex items-center gap-1 text-neutral-500 text-xs dark:text-neutral-300 md:text-sm'>
+          <div className='flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-300 md:text-sm'>
             <HeroiconsSvgWrapper className='h-4 w-4'>
               {SvgPaths.calendar}
             </HeroiconsSvgWrapper>
@@ -52,7 +52,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
         >
           <SnsSvgWrapper
             fill='currentColor'
-            className='h-6 w-6 text-neutral-600 md:h-6 md:w-6 dark:hover:text-neutral-100 dark:text-neutral-300 hover:text-neutral-700'
+            className='h-6 w-6 text-zinc-700 md:h-6 md:w-6 dark:hover:text-zinc-100 dark:text-zinc-300 hover:text-zinc-700'
           >
             {SvgPaths.x}
           </SnsSvgWrapper>
@@ -61,9 +61,9 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
           href={`https://github.com/yajihum/yajihum-dev-honox/blob/main/app/routes/blog/posts/${tag}/${slug}.mdx`}
           target='_blank'
           rel='noopener noreferrer'
-          className='flex items-center gap-1.5 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 text-neutral-600 text-sm dark:border-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-700 hover:bg-neutral-50 dark:text-white'
+          className='flex items-center gap-1.5 rounded-full border border-zinc-300 bg-zinc-100 px-4 py-2 text-sm text-zinc-600 dark:border-zinc-400 dark:bg-zinc-950 dark:hover:bg-zinc-900 hover:bg-zinc-50 dark:text-white'
         >
-          <SnsSvgWrapper className='h-5 w-5 fill-neutral-700 md:h-5 md:w-5 dark:fill-white'>
+          <SnsSvgWrapper className='h-5 w-5 fill-zinc-700 md:h-5 md:w-5 dark:fill-white'>
             {SvgPaths.github}
           </SnsSvgWrapper>
           GitHubで編集を提案

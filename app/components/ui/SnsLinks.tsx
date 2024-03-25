@@ -34,7 +34,7 @@ const snsLinks: SnsLink[] = [
     url: 'https://speakerdeck.com/yajihum',
     icon: SvgPaths.speakerDeck,
     userName: '@yajihum',
-    fill: 'fill-green-500',
+    fill: 'fill-teal-600',
   },
   {
     name: 'Instagram',
@@ -54,7 +54,7 @@ export const SnsLinks = () => {
             href={link.url}
             target='_blank'
             rel='noreferrer'
-            className='flex gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-neutral-100'
+            className='flex gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-zinc-100'
           >
             <SnsSvgWrapper
               className={`h-11 w-11 rounded-md dark:bg-white p-1.5 ${link.fill}`}
@@ -63,7 +63,7 @@ export const SnsLinks = () => {
             </SnsSvgWrapper>
             <div className='grid grid-cols-1 items-center text-left'>
               <p className='text-sm'>{link.name}</p>
-              <p className='text-neutral-400 text-xs'>{link.userName}</p>
+              <p className='text-xs text-zinc-400'>{link.userName}</p>
             </div>
           </a>
         </li>

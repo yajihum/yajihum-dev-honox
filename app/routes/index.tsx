@@ -9,7 +9,7 @@ export default createRoute((c) => {
       <section class='grid grid-cols-1 justify-items-center gap-10'>
         <div class='grid grid-cols-1 gap-2 whitespace-pre-wrap text-center font-semibold md:gap-6'>
           <p class='text-3xl md:text-5xl'>Welcome 👋</p>
-          <p class='text-lg text-neutral-500 dark:text-neutral-300/90 md:text-xl'>
+          <p class='text-lg text-zinc-500 dark:text-zinc-300/90 md:text-xl'>
             {greetingTitle}
           </p>
         </div>
