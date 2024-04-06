@@ -19,3 +19,11 @@ html {
 .toc-link:hover {
   color: #fff;
 }
+
+.footnotes a {
+  color: #bdbdbd;
+}
+
+.footnotes a:hover {
+  color: #fff;
+}
