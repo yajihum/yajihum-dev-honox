@@ -18,6 +18,7 @@ html {
 
 .toc-link:hover {
   color: #fff;
+  text-decoration: underline;
 }
 
 .footnotes a {
