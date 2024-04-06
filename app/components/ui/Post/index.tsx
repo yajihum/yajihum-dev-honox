@@ -39,7 +39,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
         </section>
       </div>
       <section className='grid grid-cols-1 rounded-xl p-1'>
-        <p class='leading-relaxed'>{description}</p>
+        <p class='leading-7'>{description}</p>
         <PostContent content={children} />
       </section>
       {/* <Stamp /> */}
