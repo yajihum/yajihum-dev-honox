@@ -12,14 +12,14 @@ type Props = {
 };
 
 export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
-  const { title, pubDate, icon } = frontmatter;
+  const { title, description, pubDate, icon } = frontmatter;
 
   const c = useRequestContext();
   const current = c.req.path;
   const slug = current.split('/').pop();
 
   return (
-    <div className='grid grid-cols-1 gap-12 py-4 md:py-8'>
+    <div className='grid grid-cols-1 gap-28 py-4 md:py-8'>
       <div className='flex flex-col gap-6 md:gap-10'>
         <div className='flex justify-center'>
           <img
@@ -38,7 +38,8 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
           </div>
         </section>
       </div>
-      <section className='rounded-xl p-1'>
+      <section className='grid grid-cols-1 rounded-xl p-1'>
+        <p>{description}</p>
         <PostContent content={children} />
       </section>
       {/* <Stamp /> */}

@@ -1,5 +1,6 @@
 import pages from '@hono/vite-cloudflare-pages';
 import ssg from '@hono/vite-ssg';
+import rehypeToc from '@jsdevtools/rehype-toc';
 import mdx from '@mdx-js/rollup';
 import honox from 'honox/vite';
 import client from 'honox/vite/client';
@@ -8,13 +9,35 @@ import rehypeSlug from 'rehype-slug';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
-import remarkToc from 'remark-toc';
 import { defineConfig } from 'vite';
+import type { Toc, TocChildren } from './app/types';
 
 const entry = './app/server.ts';
 
 const rehypePrettyCodeOptions = {
   theme: 'poimandres',
+};
+
+const tocOptions = {
+  headings: ['h2', 'h3'],
+  position: 'afterbegin',
+  cssClasses: {
+    link: 'toc-link not-prose',
+  },
+  customizeTOC: (toc: Toc) => {
+    const newChildren: TocChildren[] = [
+      {
+        type: 'element',
+        tagName: 'h2',
+        properties: {
+          id: 'table-of-contents',
+        },
+        children: [{ type: 'text', value: '目次' }],
+      },
+      ...(toc.children || []),
+    ];
+    return { ...toc, children: newChildren };
+  },
 };
 
 export default defineConfig(({ mode }) => {
@@ -40,14 +63,10 @@ export default defineConfig(({ mode }) => {
       pages(),
       mdx({
         jsxImportSource: 'hono/jsx',
-        remarkPlugins: [
-          remarkFrontmatter,
-          remarkMdxFrontmatter,
-          remarkGfm,
-          [remarkToc, { maxDepth: 3, heading: '目次' }],
-        ],
+        remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
         rehypePlugins: [
           rehypeSlug,
+          [rehypeToc, tocOptions],
           [rehypePrettyCode, rehypePrettyCodeOptions],
         ],
       }),

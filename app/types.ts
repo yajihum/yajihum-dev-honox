@@ -20,3 +20,26 @@ export type Post = [
     frontmatter: Meta;
   },
 ];
+
+export type TocChildren = {
+  type: string;
+  tagName?: string;
+  value?: string;
+  properties?: {
+    id?: string;
+    className?: string;
+    href?: string;
+  };
+  children?: TocChildren[];
+};
+
+export type Toc = {
+  type: string;
+  tagName: string;
+  properties: {
+    id?: string;
+    className?: string;
+  };
+  value?: string;
+  children?: TocChildren[];
+};

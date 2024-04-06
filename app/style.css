@@ -11,3 +11,11 @@
 html {
   font-family: 'Sawarabi Gothic', 'ui-sans-serif', 'system-ui', 'sans-serif';
 }
+
+.toc-link {
+  color: #bdbdbd;
+}
+
+.toc-link:hover {
+  color: #fff;
+}
