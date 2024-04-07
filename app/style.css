@@ -13,12 +13,11 @@ html {
 }
 
 .toc-link {
-  color: #bdbdbd;
+  @apply text-zinc-500 dark:text-zinc-300;
 }
 
 .toc-link:hover {
-  color: #fff;
-  text-decoration: underline;
+  @apply text-zinc-600 dark:text-zinc-200 underline;
 }
 
 .footnotes a {
@@ -31,4 +30,40 @@ html {
 
 p:has(> img) {
   text-align: center;
+}
+
+.link-card {
+  @apply rounded-xl border border-zinc-200 bg-zinc-100 shadow shadow-zinc-200 transition-colors duration-300;
+}
+
+.link-card:hover {
+  @apply bg-zinc-50;
+}
+
+.link-card a {
+  @apply grid grid-cols-1 gap-4 p-4 md:px-8 md:py-6;
+}
+
+.link-card-title {
+  @apply grid grid-cols-1 gap-2;
+}
+
+.link-card-title p:first-child {
+  @apply m-0 text-sm md:text-base text-zinc-600;
+}
+
+.link-card-title p:last-child {
+  @apply m-0 line-clamp-2 text-xs text-zinc-500 md:text-sm;
+}
+
+.link-card-site {
+  @apply flex items-center gap-2 md:gap-4;
+}
+
+.link-card-site img {
+  @apply !w-5 flex-shrink-0;
+}
+
+.link-card-site p {
+  @apply text-xs text-zinc-500 md:text-sm;
 }

@@ -66,8 +66,7 @@ export const remarkLinkCard = () => async (tree: Root) => {
           type: 'element',
           data: {
             hProperties: {
-              className:
-                'not-prose rounded-xl border border-zinc-200 bg-zinc-100 shadow shadow-zinc-300 transition-colors duration-300 hover:bg-zinc-50',
+              className: 'not-prose link-card',
             },
           },
           children: [
@@ -76,8 +75,6 @@ export const remarkLinkCard = () => async (tree: Root) => {
               url,
               data: {
                 hProperties: {
-                  className:
-                    'block px-4 pt-4 font-light text-black no-underline hover:text-black md:px-8 md:pb-2 md:pt-6',
                   target: '_blank',
                   rel: 'noreferrer',
                 },
@@ -87,17 +84,12 @@ export const remarkLinkCard = () => async (tree: Root) => {
                   type: 'element',
                   data: {
                     hProperties: {
-                      className: 'grid grid-cols-1 gap-2',
+                      className: 'link-card-title',
                     },
                   },
                   children: [
                     {
                       type: 'paragraph',
-                      data: {
-                        hProperties: {
-                          className: 'm-0 text-sm md:text-base text-zinc-600',
-                        },
-                      },
                       children: [
                         {
                           type: 'text',
@@ -107,12 +99,6 @@ export const remarkLinkCard = () => async (tree: Root) => {
                     },
                     {
                       type: 'paragraph',
-                      data: {
-                        hProperties: {
-                          className:
-                            'm-0 line-clamp-2 text-xs text-zinc-500 md:text-sm',
-                        },
-                      },
                       children: [
                         {
                           type: 'text',
@@ -126,7 +112,7 @@ export const remarkLinkCard = () => async (tree: Root) => {
                   type: 'element',
                   data: {
                     hProperties: {
-                      className: 'flex items-center',
+                      className: 'link-card-site',
                     },
                   },
                   children: [
@@ -136,7 +122,7 @@ export const remarkLinkCard = () => async (tree: Root) => {
                       alt: `${ogp.siteName} website's favicon`,
                       data: {
                         hProperties: {
-                          className: '!w-5 flex-shrink-0',
+                          // className: '!w-5 flex-shrink-0',
                           referrerPolicy: 'no-referrer',
                           width: 10,
                           height: 10,
@@ -145,11 +131,6 @@ export const remarkLinkCard = () => async (tree: Root) => {
                     },
                     {
                       type: 'paragraph',
-                      data: {
-                        hProperties: {
-                          className: 'm-4 text-xs text-neutral-600 md:text-sm',
-                        },
-                      },
                       children: [
                         {
                           type: 'text',
