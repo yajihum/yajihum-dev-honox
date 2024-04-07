@@ -28,3 +28,7 @@ html {
 .footnotes a:hover {
   color: #fff;
 }
+
+p:has(> img) {
+  text-align: center;
+}

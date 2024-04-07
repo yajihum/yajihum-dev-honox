@@ -11,6 +11,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vite';
 import type { Toc, TocChildren } from './app/types';
+import { remarkLinkCard } from './plugins/remark';
 
 const entry = './app/server.ts';
 
@@ -64,7 +65,12 @@ export default defineConfig(({ mode }) => {
       pages(),
       mdx({
         jsxImportSource: 'hono/jsx',
-        remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
+        remarkPlugins: [
+          remarkFrontmatter,
+          remarkMdxFrontmatter,
+          remarkGfm,
+          remarkLinkCard,
+        ],
         rehypePlugins: [
           rehypeSlug,
           [rehypeToc, tocOptions],
