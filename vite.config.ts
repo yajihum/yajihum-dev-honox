@@ -15,6 +15,7 @@ import type { Toc, TocChildren } from './app/types';
 const entry = './app/server.ts';
 
 const rehypePrettyCodeOptions = {
+  grid: false,
   theme: 'poimandres',
 };
 

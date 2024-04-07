@@ -38,7 +38,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
           </div>
         </section>
       </div>
-      <section className='grid grid-cols-1 rounded-xl p-1'>
+      <section className='rounded-xl p-1'>
         <p class='leading-7'>{description}</p>
         <PostContent content={children} />
       </section>
