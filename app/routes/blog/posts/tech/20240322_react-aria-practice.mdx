@@ -1,28 +1,30 @@
 ---
-title: 'React Ariaを触ってみる'
-description: 'アクセシブルなコンポーネント作成を手助けしてくれるReact Ariaを使ってみた'
-published: false
+title: 'React Ariaから学ぶアクセシビリティ'
+description: 'React AriaはAdobeから提供されているReact向けのライブラリで、アクセシビリティを重視したコンポーネント作成を手助けしてくれるものです。今回はReact Aria（React Aria Components）を触ってアクセシビリティを学びながらStorybook上で動かし、アクセシビリティのテストも行ってみます。'
+published: true
 pubDate: '2024/03/22 21:10'
 tag: 'tech'
 icon: 'symbols/156'
 ---
 
-React AriaはAdobeから提供されているReact向けのライブラリで、アクセシビリティを重視したコンポーネント作成を手助けしてくれるものです。
-今回はReact Ariaを触ってStorybook上で動かしてみます。
-
-## 目次
-
 ## React Ariaとは
 
-React Ariaの特徴としては以下のようなものがあります。
+React Aria[^1]とはAdobeがOSSで提供している`React Spectrum Libraries`のうちの1つで、特徴としては以下のようなものがあります。
 
 - ヘッドレスコンポーネント（スタイルやレイアウトを独自に提供しない）
 - アクセシブルなドラッグ＆ドロップ、キーボードによる複数選択などの高機能を実現
 - 全てのデバイスでのマウス、タッチ、キーボード、スクリーンリーダーのインタラクションを最適化する
 - i18n対応
 
-↓公式サイト  
-https://react-spectrum.adobe.com/react-aria/
+### React Ariaで使用できるライブラリ
+
+1. React Aria components
+
+   - ヘッドレスコンポーネント集。2のフックなどのAPIを使用して作られている。操作に応じてdata属性が追加されるため、それを使用して独自のスタイルを適用できる。
+
+2. React Aria
+
+   - `useButton`などのフックを提供してくれるライブラリ。1をよりカスタマイズしたい場合に使用する。
 
 ## Next.jsのプロジェクト作成
 
@@ -41,37 +43,17 @@ npx create-next-app react-aria-storybook
 bunx storybook@latest init
 ```
 
-https://storybook.js.org/docs/get-started/nextjs
+## React Aria Componentsのインストール
 
-## React Ariaのインストール
-
-React Ariaは以下のようにインストールします。
+React Aria Comonentsをインストールします。
 
 ```bash
 bun add react-aria-components
 ```
 
-## Buttonコンポーネントの作成
+## Comboboxコンポーネントの作成
 
-まずは簡単なButtonコンポーネントを作成してみます。
+簡単なComboboxコンポーネントを作成してみます。
+まずはReact Aria Componentsを使用せずに、[APGのドキュメントにあるアクセシビリティ条件](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/)を満たすコンボボックスを実装してみます。
 
-`src/app/components/Button.tsx`を作成し、以下のように記述します。
-
-```tsx
-'use client';
-
-import { Button as RACButton, type ButtonProps } from 'react-aria-components';
-
-export const Button = ({ children, ...props }: ButtonProps) => {
-  return (
-    <RACButton
-      {...props}
-      className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-    >
-      {children}
-    </RACButton>
-  );
-};
-```
-
-これが一番ベーシックなButtonコンポーネントです。
+[^1]: https://react-spectrum.adobe.com/react-aria/
