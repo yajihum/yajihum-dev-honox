@@ -18,6 +18,16 @@ const entry = './app/server.ts';
 const rehypePrettyCodeOptions = {
   grid: false,
   theme: 'poimandres',
+  transformers: [
+    {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      code(node: any) {
+        node.properties = {
+          className: 'not-prose',
+        };
+      },
+    },
+  ],
 };
 
 const tocOptions = {
