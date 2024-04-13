@@ -1,7 +1,7 @@
 ---
-title: 'React AriaとTailwind CSSでアクセシビリティを考慮した実装をする'
+title: 'React Ariaでアクセシビリティを考慮した実装をする'
 description: 'React AriaはAdobeから提供されているReact向けのライブラリで、アクセシビリティを重視したコンポーネント作成を手助けしてくれるものです。React Ariaを使用することで適切な属性の付与と操作が可能になりますが、アクセシビリティの高いデザイン実装は自分で行う必要があります。今回はReact Aria（React Aria Components）を触ってアクセシビリティを学びながらStorybook上で動かし、テストも行ってみます。'
-published: false
+published: true
 pubDate: '2024/03/22 21:10'
 tag: 'tech'
 icon: 'symbols/156'
@@ -46,18 +46,19 @@ bunx storybook@latest init
 bun add react-aria-components
 ```
 
+今回のプロジェクトのリポジトリは以下で見れます。
+
+https://github.com/yajihum/react-aria-storybook
+
 ## Comboboxコンポーネントの作成
 
 簡単なComboboxコンポーネントを作成してみます。
-まずはReact Ariaを使用せずに作成しようと試しましたが、キーボード操作などが思ったよりも複雑で面倒な感じだったので諦めました...。
-普通に最初からReact Ariaを使用します🙄
-
 コードとしては次のような感じです。
 
 ```tsx title="Combobox.tsx"
 'use client';
 
-import { useState, type FC } from 'react';
+import { useState } from 'react';
 import {
   Button,
   ComboBox,
@@ -65,7 +66,6 @@ import {
   Input,
   Label,
   Popover,
-  type Key,
 } from 'react-aria-components';
 import { ListBox } from './ListBox';
 
@@ -108,7 +108,7 @@ export const Combobox: FC = () => {
         <Label className='text-sm'>Favorite Animal</Label>
         <Group className='cursor-pointer rounded border border-gray-300 bg-white px-1.5 py-1 focus-within:outline hover:outline focus-within:outline-2 focus-within:outline-gray-500 hover:outline-2 hover:outline-gray-500 focus-within:outline-offset-2 hover:outline-offset-2'>
           <Input className='cursor-pointer outline-none' />
-          <Button>▼</Button>
+          <Button aria-label='候補を表示'>▼</Button>
         </Group>
         <Popover>
           <ListBox options={options} />
@@ -158,21 +158,14 @@ const ListBoxItem = ({
 
 type Props = {
   options: Option[];
-  width?: string;
   'aria-label'?: string;
 };
 
-export const ListBox: FC<Props> = ({
-  width,
-  'aria-label': ariaLabel,
-  options,
-}) => {
+export const ListBox: FC<Props> = ({ 'aria-label': ariaLabel, options }) => {
   return (
     <RACListBox
       aria-label={ariaLabel}
-      className={`max-h-52 ${
-        width ?? 'w-[--trigger-width]'
-      } overflow-auto rounded border border-gray-500 bg-white shadow-md`}
+      className='max-h-52 w-48 overflow-auto rounded border border-gray-500 bg-white shadow-md'
     >
       {options.map((option) => (
         <ListBoxItem key={option.id} id={option.name} textValue={option.name}>
@@ -204,11 +197,28 @@ type Story = StoryObj<typeof meta>;
 export const Default = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
+
+    // comboboxにフォーカスが当たった時のスタイルを確認する
+    await userEvent.tab();
+    expect(canvas.getByRole('combobox')).toHaveFocus();
+    expect(canvas.getByRole('group')).toHaveStyle({
+      'outline-width': '2px',
+      'outline-offset': '2px',
+    });
+
+    // optionを選択して値が変わることを確認する
     await userEvent.click(
       canvas.getByRole('button', { name: '候補を表示 Favorite Animal' }),
     );
     await userEvent.click(canvas.getByRole('option', { name: 'Cat' }));
     expect(canvas.getByRole('combobox')).toHaveValue('Cat');
+
+    // typeして値が変わることを確認する
+    await userEvent.clear(canvas.getByRole('combobox'));
+    await userEvent.type(canvas.getByRole('combobox'), 'Dog');
+    await userEvent.keyboard('{arrowdown}');
+    await userEvent.keyboard('{enter}');
+    expect(canvas.getByRole('combobox')).toHaveValue('Dog');
   },
 } satisfies Story;
 ```
@@ -240,22 +250,24 @@ export const Default = {
     })),
   },
   render: ({ options }) => {
-    return <ListBox aria-label='候補' width='w-52' options={options} />;
+    return <ListBox aria-label='候補' options={options} />;
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
     await userEvent.click(canvas.getByRole('option', { name: 'Option 0' }));
     await userEvent.keyboard('{arrowdown}');
-    expect(canvas.getByRole('option', { name: 'Option 1' })).toHaveAttribute(
-      'data-focused',
-      'true',
-    );
+
+    expect(canvas.getByRole('option', { name: 'Option 1' })).toHaveFocus();
+    expect(canvas.getByRole('option', { name: 'Option 1' })).toHaveStyle({
+      'border-top-width': '2px',
+      'border-bottom-width': '2px',
+    });
   },
 } satisfies Story;
 ```
 
 LitBoxでもキーボード操作を伴うテストを行っています。
-（ヘッドレスブラウザ上でのテストだからキーボード操作のテストが出来るのステキ😀）
 
 また、`@storybook/addon-a11y`のアドオンを使用してアクセシビリティのテストも行います。
 
@@ -263,7 +275,7 @@ LitBoxでもキーボード操作を伴うテストを行っています。
 *Storybook上でのアクセシビリティのテスト結果  
 めっちゃテストされてる*
 
-[Webページとして公開してあるStorybook](https://6617e24c442a108d021eb826-ljstetfalh.chromatic.com/?path=/story/combobox--default)で確認が可能です。
+[Webページとして公開してあるStorybook](https://6617e24c442a108d021eb826-awlvwyikrg.chromatic.com/?path=/story/components-combobox-combobox--default)で確認が可能です。
 
 ## デザイン観点のアクセシビリティについて
 
@@ -296,3 +308,63 @@ LitBoxでもキーボード操作を伴うテストを行っています。
     - `py-0.5 data-[focused]:border-gray-500 data-[focused]:border-y-2 data-[focused]:bg-blue-100 data-[focused]:py-0`の部分
     - 透明性（opacityやrgbaでの半透明色の使用など）を使ったスタイリングを行うとOSの高コントラスト設定が有効な場合に見えにくくなったり、全く見えなくなる場合がある（実験的な機能としてCSSのメディア機能に[prefers-reduced-transparency](prefers-reduced-transparency)があったりする）
     - そのため、透明性のあるスタイルは使わずにボーダーや不透明なカラーを背景色にするなどの設定することが必要
+
+
+上記のように、aria属性の付与やキーボード操作などの他にも、デザイン観点でもアクセシビリティを意識することが必要です。
+ユーザーが操作を行った時に、今どこで操作を行っているのか、次に何の操作が期待できるか、操作に手こずるようなUIになっていないか、見やすいコントラスト比になっているかなどを意識することで誰にとっても使いやすいサイトになるでしょう。
+
+## 終わりに
+
+今回はReact Ariaを使ってアクセシブルなコンポーネントを簡単に作成することができました。プロダクションレベルで使用するにはもう少しカスタマイズが必要になると思います。
+しかし、アクセシビリティを実現する上でのaria属性の付与やキーボード操作などは一から実装すると結構大変でコンポーネントが大きくなりがちなので、このようなライブラリを使って簡潔にアクセシビリティを向上できるのはとても助かるなと思いました。
+
+また、Storybookを使用したplayやaccessibilityのテストは実際にUIを見ながら確認できるので非常に開発体験が良いです。今後業務でも使用できたら良いなと思います。
+
+## 余談
+
+[Playwrightでもアクセシビリティのテスト](https://playwright.dev/docs/accessibility-testing)が可能なので、試しにやってみました。
+
+```tsx title="combobox.spec.tsx"
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
+
+test('combobox page', async ({ page }, testInfo) => {
+  await page.goto('/combobox');
+
+  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+  await testInfo.attach('accessibility-scan-results', {
+    body: JSON.stringify(accessibilityScanResults, null, 2),
+    contentType: 'application/json',
+  });
+
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Combobox' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Favorite Animal' }),
+  ).toBeVisible();
+  expect(accessibilityScanResults.violations).toEqual([]);
+});
+```
+
+- `@axe-core/playwright`をinstallすればすぐに実行可能
+- `testInfo`を使用すればaccessibilityテストの結果のレポートを細かく確認できる
+- テストしている項目としては[axc-coreのGitHub](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)で公開されている
+
+a11yのテストという観点でStorybookとの使い分けとしては、
+- StorybookのアドオンはStoryを表示している時にのみ確認可能（実際にどの要素に対してどのテストをしているかがわかりやすい）
+- そのため、全てのStoryを一度に確認したい場合は`test-runner`と`axe-playwright`使用すれば可能
+
+https://storybook.js.org/blog/automate-accessibility-tests-with-storybook/
+
+- 上記をやるならPlaywightでいい気がする
+
+結論：Storybookではアドオンを追加し、Playwrightでもa11yのテストをする
+でいい気がしました🙂‍↕️
+
+知見が浅いのでそうじゃない！と思った方はぜひ教えて欲しいです！
+
+## 参考
+
+
+https://zenn.dev/ryo_manba/articles/ccd0fddcb5e02c
