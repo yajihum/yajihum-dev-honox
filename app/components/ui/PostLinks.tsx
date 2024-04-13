@@ -21,28 +21,23 @@ export const PostLinks = ({ posts, tag }: Props) => {
               href={`/blog/posts/${tag}/${slug}`}
               className='flex items-center gap-4 p-4 md:p-5'
             >
-              <div className='flex max-h-20 items-center rounded-xl bg-white p-2 md:w-1/4'>
-                <img
-                  src={`${emojiDomain}${module.frontmatter.icon}.png`}
-                  alt='絵文字アイコン'
-                  className='h-14 w-14 p-1 md:h-16 md:w-16'
-                />
-              </div>
-              <div className='flex w-3/4 flex-col gap-2'>
-                <div className='flex flex-col gap-1.5'>
-                  <div className='flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-300'>
-                    <HeroiconsSvgWrapper className='h-4 w-4'>
-                      {SvgPaths.calendar}
-                    </HeroiconsSvgWrapper>
-                    <time>{module.frontmatter.pubDate}</time>
-                  </div>
-                  <p className='font-semibold text-sm'>
-                    {module.frontmatter.title}
-                  </p>
+              <img
+                src={`${emojiDomain}${module.frontmatter.icon}.png`}
+                alt='絵文字アイコン'
+                className='rounded-xl bg-white p-2'
+                width='72'
+                height='72'
+                loading='lazy'
+              />
+              <div className='flex flex-col gap-2 text-xs text-zinc-500 dark:text-zinc-300'>
+                <div className='flex items-center gap-1'>
+                  <HeroiconsSvgWrapper className='h-4 w-4'>
+                    {SvgPaths.calendar}
+                  </HeroiconsSvgWrapper>
+                  <time>{module.frontmatter.pubDate}</time>
                 </div>
-                <p className='line-clamp-2 text-xs text-zinc-500 dark:text-zinc-300'>
-                  {module.frontmatter.description}
-                </p>
+                <p className='text-sm'>{module.frontmatter.title}</p>
+                <p className='line-clamp-2'>{module.frontmatter.description}</p>
               </div>
             </a>
           </article>
