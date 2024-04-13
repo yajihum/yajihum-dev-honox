@@ -1,4 +1,3 @@
-import { Style } from 'hono/css';
 import { jsxRenderer } from 'hono/jsx-renderer';
 
 import { Script } from 'honox/server';
@@ -6,6 +5,7 @@ import { Container } from '../components/layouts/Container';
 import { Footer } from '../components/layouts/Footer';
 import { Header } from '../components/layouts/Header';
 import { Layout } from '../components/layouts/Layout';
+import IslandSideBar from '../islands/sideBar';
 import { favicocnUrl, fontUrl, getOgImageUrl } from '../lib/meta';
 
 export default jsxRenderer(({ children, title, description }) => {
@@ -31,11 +31,12 @@ export default jsxRenderer(({ children, title, description }) => {
         )}
         <link rel='preload' href={fontUrl} as='font' crossorigin='anonymous' />
         <Script async src='/app/client.ts' />
-        <Style />
       </head>
       <body>
         <Layout>
-          <Header />
+          <Header>
+            <IslandSideBar />
+          </Header>
           <Container>{children}</Container>
           <Footer />
         </Layout>
