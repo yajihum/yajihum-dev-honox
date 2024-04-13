@@ -60,7 +60,7 @@ export const remarkLinkCard = () => async (tree: Root) => {
     })
       .then((res) => res.json())
       .then((ogp: unknown) => {
-        if (!isOGP(ogp) || ogp.title === '' || ogp.description === '') return;
+        if (!isOGP(ogp) || ogp.title === '') return;
 
         parent.children[index] = {
           type: 'element',
