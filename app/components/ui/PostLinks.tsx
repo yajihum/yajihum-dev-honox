@@ -29,7 +29,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
                 height='72'
                 loading='lazy'
               />
-              <div className='flex flex-col gap-2 text-xs text-zinc-500 dark:text-zinc-300'>
+              <div className='flex w-3/4 flex-col gap-2 text-xs text-zinc-500 dark:text-zinc-300'>
                 <div className='flex items-center gap-1'>
                   <HeroiconsSvgWrapper className='h-4 w-4'>
                     {SvgPaths.calendar}
