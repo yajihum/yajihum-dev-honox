@@ -45,7 +45,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
       {/* <Stamp /> */}
       <section className='flex items-center justify-between'>
         <a
-          href={`https://twitter.com/intent/tweet?text=${title}&url=https://yajihum.dev/blog/posts/${tag}/${slug}`}
+          href={`https://twitter.com/intent/tweet?text=${title}&url=https://blog.yajihum.dev/blog/posts/${tag}/${slug}`}
           target='_blank'
           rel='noopener noreferrer'
           aria-label='Xでポストする'
