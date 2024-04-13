@@ -6,7 +6,6 @@ import { Container } from '../components/layouts/Container';
 import { Footer } from '../components/layouts/Footer';
 import { Header } from '../components/layouts/Header';
 import { Layout } from '../components/layouts/Layout';
-import IslandSideBar from '../islands/sideBar';
 import { favicocnUrl, fontUrl, getOgImageUrl } from '../lib/meta';
 
 export default jsxRenderer(({ children, title, description }) => {
@@ -31,14 +30,12 @@ export default jsxRenderer(({ children, title, description }) => {
           <link href='/app/style.css' rel='stylesheet' />
         )}
         <link rel='preload' href={fontUrl} as='font' crossorigin='anonymous' />
-        <Script src='/app/client.ts' />
+        <Script async src='/app/client.ts' />
         <Style />
       </head>
       <body>
         <Layout>
-          <Header>
-            <IslandSideBar />
-          </Header>
+          <Header />
           <Container>{children}</Container>
           <Footer />
         </Layout>
