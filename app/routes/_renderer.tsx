@@ -6,7 +6,7 @@ import { Footer } from '../components/layouts/Footer';
 import { Header } from '../components/layouts/Header';
 import { Layout } from '../components/layouts/Layout';
 import IslandSideBar from '../islands/sideBar';
-import { favicocnUrl, fontUrl, getOgImageUrl } from '../lib/meta';
+import { favicocnUrl, getOgImageUrl } from '../lib/meta';
 
 export default jsxRenderer(({ children, title, description }) => {
   return (
@@ -29,7 +29,6 @@ export default jsxRenderer(({ children, title, description }) => {
         ) : (
           <link href='/app/style.css' rel='stylesheet' />
         )}
-        <link rel='preload' href={fontUrl} as='font' crossorigin='anonymous' />
         <Script async src='/app/client.ts' />
       </head>
       <body>
