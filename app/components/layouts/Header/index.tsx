@@ -14,7 +14,7 @@ export const Header: FC = ({ children }) => {
               alt='かえるの絵文字'
               className='inline-block h-7 w-7'
             />
-            <span class='pb-0.5'>yajihum.dev</span>
+            <span class='pb-0.5'>blog.yajihum.dev</span>
           </h2>
         </a>
         <Navigation>{children}</Navigation>
