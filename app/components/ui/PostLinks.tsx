@@ -36,7 +36,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
                   </HeroiconsSvgWrapper>
                   <time>{module.frontmatter.pubDate}</time>
                 </div>
-                <p className='text-sm'>{module.frontmatter.title}</p>
+                <p className='font-bold text-sm'>{module.frontmatter.title}</p>
                 <p className='line-clamp-2'>{module.frontmatter.description}</p>
               </div>
             </a>

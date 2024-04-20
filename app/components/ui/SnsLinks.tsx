@@ -54,16 +54,16 @@ export const SnsLinks = () => {
             href={link.url}
             target='_blank'
             rel='noreferrer'
-            className='flex gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-zinc-100'
+            className='flex items-center gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-zinc-100'
           >
             <SnsSvgWrapper
-              className={`h-11 w-11 rounded-md dark:bg-white p-1.5 ${link.fill}`}
+              className={`h-12 w-12 rounded-md dark:bg-white p-1.5 ${link.fill}`}
             >
               {link.icon}
             </SnsSvgWrapper>
             <div className='grid grid-cols-1 items-center text-left'>
               <p className='text-sm'>{link.name}</p>
-              <p className='text-xs text-zinc-400'>{link.userName}</p>
+              <p className='text-sm text-zinc-400'>{link.userName}</p>
             </div>
           </a>
         </li>

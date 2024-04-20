@@ -2,9 +2,10 @@ import type { Root } from 'mdast';
 import { visit } from 'unist-util-visit';
 import { linkcardEntryPoint } from '../app/lib/cloudflare';
 
-type OGP = {
+export type OGP = {
   title: string;
   description: string;
+  imageUrl: string;
   siteName: string;
   faviconUrl: string;
 };

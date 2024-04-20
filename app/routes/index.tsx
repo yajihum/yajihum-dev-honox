@@ -38,7 +38,7 @@ export default createRoute((c) => {
             </div>
             <p class='text-lg md:text-2xl'>yajihum / やじはむ</p>
           </div>
-          <p class='flex flex-col gap-1.5 text-center text-sm'>
+          <p class='flex flex-col gap-1.5 text-center'>
             <span className='block'>
               {`I'm a frontend engineer working at `}
               <a

@@ -3,12 +3,14 @@ import type { PropsWithChildren } from 'hono/jsx';
 type HeroiconsSvgWrapperProps = {
   className?: string;
   'aria-label'?: string;
+  'aria-hidden'?: boolean;
 } & PropsWithChildren;
 
 export const HeroiconsSvgWrapper = ({
   children,
   className,
   'aria-label': ariaLabel,
+  'aria-hidden': ariaHidden = false,
 }: HeroiconsSvgWrapperProps) => {
   return (
     <svg
@@ -19,6 +21,7 @@ export const HeroiconsSvgWrapper = ({
       stroke='currentColor'
       class={className}
       aria-label={ariaLabel}
+      aria-hidden={ariaHidden}
     >
       <title>{ariaLabel}</title>
       {children}
