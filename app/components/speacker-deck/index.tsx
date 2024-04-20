@@ -8,6 +8,24 @@ export type SpeakerDeckEmbedding = {
 
 export const speakerDeckEmbeddings = [
   {
+    title: 'アクセシビリティを考慮したUI/CSSフレームワーク・ライブラリ選定',
+    date: '2024/04/20',
+    event: 'BARフロントえんどう #2 「CSS Library / Framework」',
+    speakerDeckUrl:
+      'https://speakerdeck.com/yajihum/csshuremuwakuraiburarixuan-ding',
+    embedding: (
+      <iframe
+        class='speakerdeck-iframe'
+        frameborder='0'
+        src='https://speakerdeck.com/player/771d68b9bc93436e8d76fd759faa4238'
+        title='アクセシビリティを考慮したUI/CSSフレームワーク・ライブラリ選定'
+        allowFullScreen='true'
+        style='border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;'
+        data-ratio='1.7777777777777777'
+      />
+    ),
+  },
+  {
     title: 'フロントエンドにおける テスト方針〜Testing Trophyの概念とBDD〜',
     date: '2023/10/25',
     event: 'CTOA若手エンジニアコミュニティ 勉強会 #4',
