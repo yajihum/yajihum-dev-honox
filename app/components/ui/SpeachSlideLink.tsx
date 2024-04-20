@@ -29,12 +29,7 @@ export const SpeachSlideLink: FC<Props> = ({
             {SvgPaths.arrowUpRight}
           </HeroiconsSvgWrapper>
         </div>
-        <div className='flex items-center gap-1 text-zinc-600 md:justify-end dark:text-zinc-300'>
-          <HeroiconsSvgWrapper className='h-4 w-4'>
-            {SvgPaths.atSymbol}
-          </HeroiconsSvgWrapper>
-          <p className='text-xs md:text-sm'>{eventName}</p>
-        </div>
+        <p className='text-start text-xs text-zinc-600 md:text-end dark:text-zinc-30 dark:text-zinc-300 md:text-sm'>{`@ ${eventName}`}</p>
       </div>
     </a>
   );
