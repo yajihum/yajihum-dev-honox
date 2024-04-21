@@ -25,7 +25,7 @@ export const SpeachSlideLink: FC<Props> = ({
       <div class='grid grid-cols-1 gap-1'>
         <div class='flex items-center justify-end gap-2'>
           <p className='text-sm md:font-semibold md:text-base'>{title}</p>
-          <HeroiconsSvgWrapper className='hidden h-5 w-5 md:block'>
+          <HeroiconsSvgWrapper aria-hidden className='hidden h-5 w-5 md:block'>
             {SvgPaths.arrowUpRight}
           </HeroiconsSvgWrapper>
         </div>
