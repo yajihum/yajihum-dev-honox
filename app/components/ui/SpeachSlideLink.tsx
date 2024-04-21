@@ -23,7 +23,7 @@ export const SpeachSlideLink: FC<Props> = ({
     >
       <img src={ogImageUrl} alt={title} className='rounded-lg' />
       <div class='grid grid-cols-1 gap-1'>
-        <div class='flex items-center justify-end gap-2'>
+        <div class='flex items-center justify-start gap-2 md:justify-end'>
           <p className='text-sm md:font-semibold md:text-base'>{title}</p>
           <HeroiconsSvgWrapper aria-hidden className='hidden h-5 w-5 md:block'>
             {SvgPaths.arrowUpRight}
