@@ -1,7 +1,7 @@
 ---
 title: 'クロスサイトでCookieを使う'
-description: 'クロスサイトでCookieを保持して使えるようにしたいという時があると思います。そんな時にどうすればいいかをお話しします。'
-published: false
+description: 'クロスサイトでCookieを保持して使えるようにしたいという時に最終的にしたことのメモ'
+published: true
 pubDate: '2024/05/25 22:34'
 tag: 'tech'
 icon: 'smilieys/108'
@@ -9,4 +9,43 @@ icon: 'smilieys/108'
 
 ## 結論
 
+localhostをSSL化＆Set-CookieのSecure,SameSite,Domain属性を指定してやり取りするサイトがそのサブドメインになるようにしたら解決できた
 
+## やりたかったとこ
+
+まずこれは業務内での話で、ローカルで開発を行う際にはバックエンドのAPIをdev環境のものを使うようにしている。  
+その際にバックエンドのエンドポイントは`https://xxx.dev.yyy.dev`のようになっており、ローカルの`http://localhost:3000`からアクセスするとクロスサイトになる。
+
+開発しているアプリケーションでは、アクセストークンがないとAPIへのリクエストが失敗するようになっており、フロント側でもmiddlewareでアクセストークンの認証が切れていないかどうかの確認をし、もし切れている場合はログイン画面に飛ばすという処理を行いたかった。  
+しかし、localとdevはクロスサイトのため`/login`のAPIを叩いてログインIDとパスワードを送信し、成功したとしてもSet-Cookieによるアクセストークンの保存ができない。
+
+理由としては以下のようになっている（引用：[MDN](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies#sect4)）
+> - SameSite に関する標準規格が最近変更されました  
+> - Cookie に SameSite=None が付いた場合は、 Secure 属性も指定することになりました（安全なコンテキストが必要になりました）。  
+> - 同じドメインの Cookie であっても、異なるスキーム (http: か https: か) を使用して送信された場合は同じサイトと見なされなくなりました。  
+
+`Samesite`属性は異なるサイト間でのCookieの送信を制限するためのもので、`None`を指定すると異なるサイト間でも送信できるようになるが、`Secure`属性も必要になる。  
+そのため、ローカルの`http://localhost:3000`から`https://xxx.dev.yyy.dev`にアクセスする場合は、`Secure`属性がないためCookieを保存することができない。  
+
+`Secure`属性を付与すると「HTTPS プロトコル上の暗号化されたリクエストでのみサーバーに送信」するようになるため、両者のサイトはhttpsでないといけない。
+なのでまずはローカルをSSL化する必要がある。
+
+開発はNext.jsで行っており、13.5から開発サーバーをhttpsで簡単に立ち上げられるようになったため、それを利用することにした[^1]  
+以下のように`--experimental-https`フラグを追加して`next dev`を実行すると、自動的にlocalhostがhttps化される。
+```bash
+next dev --experimental-https
+```
+
+ただ、SSL化しただけではダメだったので、他の要因を探したが、結局`Domain`属性を指定すれば同じルートドメインを持つサブドメイン間でCookieを共有することができるということを知り、それで解決できた。  
+つまり、`Set-Cookie`の`Domain`属性に`dev.yyy.dev`を指定して、ローカルを`https://localhost.dev.yyy.dev:3000`にすることで解決できた。
+
+`Domain`属性とは以下のようなものである（引用：[MDN](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies#domain_%E5%B1%9E%E6%80%A7)）
+> - Domain 属性は、Cookie を受信することができるホストを指定します。サーバーが Domain を指定しなかった場合、ブラウザーは既定でドメインを Cookie を設定したのと同じホストとし、サブドメインは除外します。  
+> - Domain が指定された場合、サブドメインは常に含まれます。したがって、 Domain を指定すると省略時よりも制限が緩和されます。ただし、サブドメイン間でユーザーに関する情報を共有する場合は有用になるでしょう。
+> - 例えば、Domain=mozilla.org を設定すると、developer.mozilla.org のようなサブドメインも含まれます。
+
+これでクロスサイト間でのCookieのやり取りができるようになった〜！
+（ちなみに業務では詳しく知っている人がおらず手探りで試していたので結構沼った🥲）
+
+
+[^1]: [HTTPS for Local Development](https://nextjs.org/docs/app/api-reference/next-cli#https-for-local-development)

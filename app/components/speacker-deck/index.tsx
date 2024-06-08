@@ -1,3 +1,5 @@
+import type { JSX } from 'hono/jsx/jsx-runtime';
+
 export type SpeakerDeckEmbedding = {
   title: string;
   date: string;
