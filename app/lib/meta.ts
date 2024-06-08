@@ -3,6 +3,6 @@ export const favicocnUrl = '/static/favicon.ico';
 export const fontUrl = 'https://images.site.yajihum.dev/sawarabi.woff2';
 
 export const getOgImageUrl = (title: string) => {
-  const url = `https://res.cloudinary.com/dpgixnkg1/image/upload/l_text:noto-snans.ttf_55_bold:${title},co_rgb:0A2F21,w_1000,c_fit,y_-130/v1713685356/blog_og_image.png`;
+  const url = `https://res.cloudinary.com/dpgixnkg1/image/upload/l_text:noto-snans.ttf_55_bold:${title},co_rgb:0A2F21,w_1000,c_fit,y_-130/v1717843031/og_image.png`;
   return url;
 };
