@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240208.0",
-    "@hono/vite-cloudflare-pages": "^0.2.4",
+    "@hono/vite-cloudflare-pages": "^0.4.0",
     "@hono/vite-ssg": "^0.1.0",
     "@tailwindcss/typography": "^0.5.10",
     "autoprefixer": "^10.4.18",
