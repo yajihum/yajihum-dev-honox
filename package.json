@@ -32,6 +32,6 @@
     "postcss": "8.4.38",
     "tailwindcss": "3.4.4",
     "vite": "5.3.1",
-    "wrangler": "3.60.3"
+    "wrangler": "3.61.0"
   }
 }
