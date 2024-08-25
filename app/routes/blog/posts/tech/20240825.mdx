@@ -1,0 +1,36 @@
+---
+title: 'TanStack QueryのPrefetchの使い所を考える'
+description: 'TanStack QueryのPrefetchの使い所を考える。'
+published: false
+pubDate: '2024/06/08 19:28'
+tag: 'tech'
+icon: 'animals-and-nature/135'
+---
+
+## はじめに
+
+業務でApp Routerを使用しているが、データフェッチライブラリとしてTanStack Queryを使用している。
+特にReact Sever ComponentsにおいてフェッチをServer Componentに寄せることでTanstack Queryを使用せずとも運用はできそうだが、コードの可読性やプロダクトの性質上クライアントでのフェッチが必要な場面が多いことなどを考え、TanStack Queryをメインで使用している、
+
+ただ、だからと言って全てのデータフェッチをクライアントサイドで行うのはパフォーマンスの観点からも適切ではなく、Server Componentのうまみも活かせなくなってしまう。
+その際に登場するのが`Prefetch`である。`Prefetch`はサーバーサイドでフェッチを行いキャッシュとして保存し、クライアント側で同じkeyに対するデータを利用する際にそのキャッシュを即座に使用することができる。
+
+詳しい使い方、使い所は以下の公式ドキュメントを読めばわかるが、自分なりの考えをまとめておく。
+- [Performance & Request Waterfalls](https://tanstack.com/query/latest/docs/framework/react/guides/request-waterfalls)
+- [Prefetching & Router Integration](https://tanstack.com/query/latest/docs/framework/react/guides/prefetching)
+- [Server Rendering & Hydration](https://tanstack.com/query/latest/docs/framework/react/guides/ssr)
+- [Advanced Server Rendering](https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr)
+
+## Prefetchの使い所
+## クライアントサイドでのPrefetch
+
+Prefetchは以下の場合で使用できるとされている。[^1]
+1. In event handlers（イベントハンドラ内）
+2. In components（コンポーネントの中）
+3. Via router integration（ルーティングとデータフェッチングを通じて行う）
+4. During Server Rendering (another form of router integration)（ルーター統合とは違う形でのサーバーサイドレンダリング時に行う）
+
+## サーバーサイドでのPrefetch
+
+
+[^1]: https://tanstack.com/query/latest/docs/framework/react/guides/prefetching

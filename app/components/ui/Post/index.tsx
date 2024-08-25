@@ -29,7 +29,7 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
           />
         </div>
         <section className='grid grid-cols-1 justify-items-center gap-2 md:gap-4'>
-          <h1 className='font-semibold text-xl md:text-3xl'>{title}</h1>
+          <h1 className='font-semibold text-xl md:text-3xl text-center'>{title}</h1>
           <div className='flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-300 md:text-sm'>
             <HeroiconsSvgWrapper className='h-4 w-4'>
               {SvgPaths.calendar}
