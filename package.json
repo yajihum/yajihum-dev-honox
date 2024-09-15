@@ -30,7 +30,7 @@
     "autoprefixer": "10.4.19",
     "front-matter": "4.0.2",
     "postcss": "8.4.47",
-    "tailwindcss": "3.4.6",
+    "tailwindcss": "3.4.11",
     "vite": "5.4.5",
     "wrangler": "3.65.1"
   }
