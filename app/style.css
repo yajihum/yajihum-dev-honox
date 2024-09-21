@@ -29,7 +29,7 @@ p:has(> img) {
 }
 
 .link-card {
-  @apply rounded-xl border border-zinc-200 bg-zinc-100 shadow shadow-zinc-200 transition-colors duration-300;
+  @apply rounded-xl border border-zinc-200 bg-zinc-100 shadow shadow-zinc-200 transition-colors duration-300 my-4;
 }
 
 .link-card:hover {
