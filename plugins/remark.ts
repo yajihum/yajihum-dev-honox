@@ -2,6 +2,8 @@ import type { Root } from 'mdast';
 import { visit } from 'unist-util-visit';
 import { linkcardEntryPoint } from '../app/lib/cloudflare';
 
+// NOTE: type error無視してるので注意
+
 export type OGP = {
   title: string;
   description: string;
@@ -40,6 +42,8 @@ const createObject = (
 });
 
 export const remarkLinkCard = () => async (tree: Root) => {
+
+  // リンクカードの作成
   const promises: Promise<void>[] = [];
   visit(tree, 'paragraph', (paragraph, index, parent) => {
     if (
@@ -123,7 +127,6 @@ export const remarkLinkCard = () => async (tree: Root) => {
                       alt: `${ogp.siteName} website's favicon`,
                       data: {
                         hProperties: {
-                          // className: '!w-5 flex-shrink-0',
                           referrerPolicy: 'no-referrer',
                           width: 10,
                           height: 10,
@@ -146,9 +149,40 @@ export const remarkLinkCard = () => async (tree: Root) => {
           ],
         };
       })
-      .catch(() => {});
+      .catch(() => { });
     promises.push(promise);
   });
 
   await Promise.all(promises);
+
+
+  // noteの作成
+  visit(tree, 'paragraph', (paragraph, index, parent) => {
+    if (!parent || !index || paragraph.children.length !== 1) return;
+
+    const text = paragraph.children[0]?.value;
+    if (!text || !text.startsWith(':::note')) return;
+
+    const content = text.replace(/:::note|:::/g, '').trim();
+
+    parent.children[index] = {
+      type: 'element',
+      data: {
+        hProperties: {
+          className: 'note',
+        },
+      },
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: content,
+            },
+          ],
+        },
+      ],
+    };
+  });
 };

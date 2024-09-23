@@ -7,14 +7,20 @@ tag: 'tech'
 icon: 'animals-and-nature/72'
 ---
 
+:::note
+2024/09/23： 「状態管理をする上でまず考えたいこと」のセクションを追加、表現や注釈の順番などを修正
+:::
+
 ## はじめに
 
 なんとなく使っていた React の Context について、ちゃんと理解できていなかったので深掘りしてみる。
 
-検索してみるとコンテキストを使用するときのアンチパターンとして、state,setState を同じオブジェクトに入れるとパフォーマンスが悪くなる（再レンダリングが多く発生する）というものがあった。
-確かにそうなのだが、分けることによってコードを書く量が増えるなどデメリットもあるので、どのように使うのが適切なのかを考えてみる。
+検索してみるといくつかの記事で、コンテキストを使用するときのアンチパターンとして「state,setState を同じオブジェクトに入れるとパフォーマンスが悪くなる（再レンダリングが多く発生する）」というものがあった。  
+確かに、パフォーマンスが悪い場合にそれがボトルネックになっている可能性はあるので分ける方が良い場合もあると思うが、分けることによってコードを書く量が増えるなどデメリットもあるので、普段Contextを扱う際には何を意識するのが良いかを考えてみる。
 
-## 問題となっている、一つのオブジェクトのまとめる場合
+ちなみに、JotaiやRecoilなどの状態管理ライブラリを使えばコード量が増える懸念をせずにパフォーマンス良く書けるが、これから話すことの前提として React の Context を使う場合を考える。
+
+## 問題となっている、1つのオブジェクトのまとめる場合
 
 以下のようなコンポーネントを作成して、どこで再レンダリングが発生するかを確認してみる。
 今回は簡易的に Vite を使用する。
@@ -123,30 +129,28 @@ export function SetUserComponent2() {
   return (
     <section>
       <h2>SetUser Component 2</h2>å
-
       <button onClick={handleClick}>ユーザーを追加</button>
     </section>
   );
 }
 ```
 
-`value={{ user, setUser }}`が肝で、`user` と `setUser` を1つのオブジェクトにまとめてvalueを入れている。
+`value={{ user, setUser }}`が肝で、`user` と `setUser` を 1 つのオブジェクトにまとめて value を入れている。
 
 この状態で`SetUserComponent1`にあるボタンをクリックすると、
 
 ![SetUserComponent1をクリックした後のログ](https://images.site.yajihum.dev/images/2024/09/0921_1.png)
 
 `UserComponent`、`SetUserComponent1`、`SetUserComponent2` 全てのコンポーネントで再レンダリングが発生していることがわかる。  
-`user`が変更されたので`UserComponent`は再レンダリングされるのはわかるが、`SetUserComponent1`、`SetUserComponent2` は`setUser`だけをContextから受け取っているので再レンダリングされる必要がない。  
+`user`が変更されたので`UserComponent`は再レンダリングされるのはわかるが、`SetUserComponent1`、`SetUserComponent2` は`setUser`だけを Context から受け取っているので再レンダリングされる必要がない。
 
 この無駄な再レンダリングが発生する理由は以下である。[^1]
-- Reactでは、異なるvalueを受け取ると、Provider配下の全てのコンポーネントが再レンダリングされる
-- 異なるvalueかどうかを判別するロジックとして`Object.is`が使用されている
+
+- React では、異なる value を受け取ると、Provider 配下の全てのコンポーネントが再レンダリングされる
+- 異なる value かどうかを判別するロジックとして`Object.is`が使用されている
 - `user`の中身が`setUser`により変わったため、`{ user, setUser }` は異なるオブジェクトとなり、再レンダリングが発生する
 
-## アンチパターンの解決策
-
-これが本当にアンチパターンかは置いといて、無駄な再レンダリングを解決する方法を考える。
+## 無駄な再レンダリングの解決策
 
 1つの解決策として、`user` と `setUser` を分ける方法がある。
 
@@ -190,79 +194,106 @@ export const useSetUserContext = () => {
 ![SetUserComponent1をクリックした後のログ](https://images.site.yajihum.dev/images/2024/09/0921_2.png)
 
 `SetUserComponent1` をクリックすると、`UserComponent` だけが再レンダリングされていることがわかる。
-`user`が変更されても`SetUserContext`のvalue、つまり`setUser`は変化しないので再レンダリングが発生しない。
+`user`が変更されても`SetUserContext`の value、つまり`setUser`は変化しないので再レンダリングが発生しない。
+
+### `{ user, setUser }`をuseMemoで囲う場合
+
+`{ user, setUser }`を`useMemo`で囲う方法もあるが、これだとuserが更新された場合に結局valueは新しいオブジェクトになるので、setUserだけを呼び出しているコンポーネントも再レンダリングされてしまう。
+なので、先ほどのようにstateとsetStateを分ける方法の方が再レンダリングは抑えられる。
+
+この場合、useMemoで囲うことで何が良いかというと`UserProvider`自体が何らかの理由で再レンダリングされた場合にuser,setUserが何も変わっていなければvalueに渡しているオブジェクトは再生成されなくなる。
 
 ## 1つのオブジェクトにまとめるのは本当にアンチパターンか？
 
-本題に戻って、先ほど紹介した1つのオブジェクトにまとめる場合のメリット・デメリットを考えてみる。
+本題に戻って、先ほど紹介した 1 つのオブジェクトにまとめる場合のメリット・デメリットを考えてみる。
 
-1. 1つのオブジェクトにまとめる場合
-    - メリット
-        - ContextやProviderの数自体やcontextの値を取得する関数が増えず、保守性・可読性が上がる
-        - state,setStateの関係がわかりやすい
-    - デメリット
-        - 無駄な再レンダリングが発生する場合がある
+1. 1 つのオブジェクトにまとめる場合
+   - メリット
+     - Context や Provider の数自体や context の値を取得する関数が増えず、保守性・可読性が上がる
+     - state,setState の関係がわかりやすい
+   - デメリット
+     - 無駄な再レンダリングが発生する場合がある
 
 分ける場合のメリット・デメリットはこの逆である。
 分ける場合はパフォーマンスと引き換えに、保守性・可読性を下げる可能性があることは忘れないでおきたい。
 
-
 ## 他の根拠となる情報
 
-### ReactのuseContextの説明で挙げられている例
+### React の useContext の説明で挙げられている例
 
-Contextの使用例として、以下で`value={{ currentUser, setCurrentUser }}`が使われている。
+Context の使用例として、以下で`value={{ currentUser, setCurrentUser }}`が使われている。
 
 https://ja.react.dev/reference/react/useContext#updating-an-object-via-context
 
-もし、1つにまとめるのが本当に問題であればこの方法を載せないか、注意書きや非推奨などのコメントがあるのではないかと思う。
+もし、1 つにまとめるのが本当に問題であればこの方法を載せないか、注意書きや非推奨などのコメントがあるのではないかと思う。
 
 ### Kent C. Dodds さんの記事
 
 そもそもなぜ不必要な再レンダリングが良くないと思われているだろうか？
-Kentさんは以下のように説明している。[^5]
+Kent さんは以下のように説明している。[^3]
 
-> 「DOMは遅い」という話を聞いたことがある人は多いですが、コンポーネントが再レンダリングされても必ずしもDOMが更新されるわけではないことを理解していない人も多いです。
-> この誤解のために、コンポーネントが実際にはDOMを更新する必要がないときでも、レンダリングがパフォーマンスのボトルネックになると信じてしまうのです。
+> 「DOM は遅い」という話を聞いたことがある人は多いですが、コンポーネントが再レンダリングされても必ずしも DOM が更新されるわけではないことを理解していない人も多いです。
+> この誤解のために、コンポーネントが実際には DOM を更新する必要がないときでも、レンダリングがパフォーマンスのボトルネックになると信じてしまうのです。
 >
 > 確かに、これは場合によっては問題になることがありますが、一般的には低スペックのモバイルデバイスでもオブジェクトの作成（レンダーフェーズ）や比較（リコンサイルフェーズ）は非常に高速です。
 
-また、Contextを最適化する方法を紹介している記事では、
+また、Context を最適化する方法を紹介している記事[^4]では、
 
 > もしコードが遅くなるかもしれないと思ってこういったことをするつもりなら、やめておいた方がいいです。冗談ではありません。
-> Reactは本当に高速で、パフォーマンスが十分に良いときにパフォーマンスの名の下に複雑さを追加するのは、「複雑さの予算」を無駄にするだけです。
+> React は本当に高速で、パフォーマンスが十分に良いときにパフォーマンスの名の下に複雑さを追加するのは、「複雑さの予算」を無駄にするだけです。
 
-なので、特にパフォーマンスがボトルネックになっていないなら、無駄な再レンダリングをそこまで気にする必要はないし、他の原因（例えばAPIのレスポンスが遅いなど）を見直すべきだと思う。
+なので、特にパフォーマンスがボトルネックになっていないなら、無駄な再レンダリングをそこまで気にする必要はないし、他の原因（例えば API のレスポンスが遅いなど）を見直すべきだと思う。
+
+## 状態管理をする上でまず考えたいこと
+
+[はじめに](#はじめに)で少し述べたが、状態管理をする際にReact Contextを直接使わず、JotaiやRecoilなどの状態管理ライブラリを使うことも考えられる。しかし、これらのライブラリを導入することを最初に試すのではなく、まずは以下の順に考えてみると良いかもしれない。
+
+1. `prop drilling`（または`threading`や`prop down`、`バケツリレー`）で解決可能か？  
+
+    親から子コンポーネントに直接、**明示的**に props を渡すことで状態を管理する方法。明示的であるとどこでどんな値が入っているのかを追いやすく、保守がしやすい。  
+
+    コンポーネントの階層が深くなるとバケツリレーが大変なので、ルートでデータを共有できる方法に変更しがちだが、まずは適切なコンポーネント分割や設計を行うことでprop drillingでも可読性を下げずに状態管理ができないかを考えたい。  
+    適切なコンポーネント分割や設計とは、不必要に複数のコンポーネントに分けて抽象化しすぎないことや、実装したい機能に対して可読性・保守性を下げるような複雑なコンポーネントの作り方をしないことを指す。  
+    分割のタイミングについてはKentさんの[When to break up a component into multiple components](https://kentcdodds.com/blog/when-to-break-up-a-component-into-multiple-components)が参考になりそう。  
+
+2. React Context APIを使う  
+
+    1で試したけどどうしても複雑になってしまう場合は次にReact Context APIを試してみる。  
+    使う際は、Providerをどこに置くか（コロケーションを意識する）や、どうContextを分けるか、場合によってはこの記事で述べたようなパフォーマンスの問題が発生することは念頭においておきたい。（ボトルネックになっていな限り気にしなくては良いが）
+    また、1と比較して明示的なデータ共有ではなくなるので、どこで・どんな順序で・どんな値が入っているのかを追いにくくなることも理解しておきたい。
+
+3. 状態管理ライブラリを使う
+
+    1,2で解決できない場合の最終手段として状態管理ライブラリを使う。  
+    Contextを多くの場所で使っており書くコードの量を節約したい場合や、再レンダリングによるパフォーマンスがボトルネックになっている場合などで使用するか考える。  
+    ただ、依存関係が一つ増えることや、こういう状態管理ライブラリがあることであまり何も考えずに軽く使ってしまうこともあるので、まずは1,2で解決できないかを優先的に考えたい。  
+
+    個人的な経験談としてJotaiを使用していたが、現状のコンポーネントが複雑でルートでデータ共有しないと大変だったり、コロケーションを意識したストアの作り方が適切にできていなかったことで、どこでどんな値が入ってくるかを追うのが本当に大変だったので、あまり使いたくないという気持ちがある。気軽に使うものではない。
 
 ## まとめ
 
-個人的には、無駄な再レンダリングが発生する場合でも、保守性・可読性が上がるのであれば1つのオブジェクトにまとめるほうがメリットがあると感じた。
+状態管理は難しい！
 
-また、効果的なContextの使い方、書き方として以下でuseReducerを併用する例があるので参考になるかも知れない！  
+## （おまけ）useState の仕組み
 
-https://kentcdodds.com/blog/how-to-use-react-context-effectively  
+そもそも、なぜ set 関数側は値が変わっていないと判断されるのだろうか？（state 側が値が変わるのは自明だけども）
 
+この理由についてわかっている人も多いと思うが、自分は恥ずかしながら set 関数は state が変わるたびに値が変化する(再生成される)のではないかと漠然と思っていた。
+また、コンポーネントの中で作成した関数は何もしないと毎回新しく生成されるため、set 関数でも同じような挙動をするのではないかと思っていた。 (よく考えたら再生成されるのは、UserProvider 自体が再レンダリングしないと発生しないので 2 つ目の理由は見当違い)
 
-## （おまけ）useStateの仕組み
+ふにゃふにゃ理解すぎるので、useState についてちゃんと調べてみよう！
 
-そもそも、なぜset関数側は値が変わっていないと判断されるのだろうか？（state側が値が変わるのは自明だけども）
+useState の仕組みについては、以下のようになっている。
 
-この理由についてわかっている人も多いと思うが、自分は恥ずかしながらset関数はstateが変わるたびに値が変化する(再生成される)のではないかと漠然と思っていた。
-また、コンポーネントの中で作成した関数は何もしないと毎回新しく生成されるため、set関数でも同じような挙動をするのではないかと思っていた。 (よく考えたら再生成されるのは、UserProvider自体が再レンダリングしないと発生しないので2つ目の理由は見当違い)
-
-ふにゃふにゃ理解すぎるので、useStateについてちゃんと調べてみよう！
-
-useStateの仕組みについては、以下のようになっている。
-- useStateはReact側が用意した関数であり、グローバルに定義されているものである（コンポーネントの中で実行されているからといって再生成されるものではない）
-- 型は`function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>]`であり、`[state, setState]`のタプルを返す[^2]
-- `setState`は内部で定義されている純粋関数[^3]であり、React側で管理しているstateの値を更新するためだけの決まった関数である
-
+- useState は React 側が用意した関数であり、グローバルに定義されているものである（コンポーネントの中で実行されているからといって再生成されるものではない）
+- 型は`function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>]`であり、`[state, setState]`のタプルを返す[^5]
+- `setState`は内部で定義されている純粋関数[^6]であり、React 側で管理している state の値を更新するためだけの決まった関数である
 
 ### 🔍 内部のコードを見てみる
 
 ※興味ない人は飛ばしてもいい
 
-Reactのソースコードを見てみる[^4]
+React のソースコードを見てみる[^7]
 
 ```tsx title="react/packages/react-reconciler/src/ReactFiberHooks.js"
 const HooksDispatcherOnMount: Dispatcher = {
@@ -271,7 +302,8 @@ const HooksDispatcherOnMount: Dispatcher = {
   ~~~
 };
 ```
-名前からわかるようにuseStateというフックがマウントされる時には`mountState`という関数が呼ばれるようである。
+
+名前からわかるように useState というフックがマウントされる時には`mountState`という関数が呼ばれるようである。
 
 このオブジェクトが使用される部分を見ると、
 
@@ -285,6 +317,7 @@ ReactSharedInternals.H =
         : HooksDispatcherOnUpdate;
 ~~~
 ```
+
 `ReactSharedInternals.H`に`HooksDispatcherOnMount`が設定されていることがわかる。
 
 ```tsx title="react/packages/react-reconciler/src/ReactFiberHooks.js"
@@ -330,6 +363,7 @@ function mountStateImpl<S>(initialState: (() => S) | S): Hook {
   return hook;
 }
 ```
+
 `mountState`関数では`dispatch`関数を生成して、`[state, setState]`のタプルを返していそう。
 また、`mountStateImpl`で`queue`というオブジェクトを作成しており、`dispatch`というプロパティがあることがわかる。
 
@@ -433,8 +467,9 @@ function dispatchSetStateInternal<S, A>(
   return false;
 }
 ```
-`dispatchSetStateInternal`がset関数の本体のようである。
-ここでは`const eagerState = lastRenderedReducer(currentState, action);`の部分で`eager（先行、即座などの意）`なstateを計算している。
+
+`dispatchSetStateInternal`が set 関数の本体のようである。
+ここでは`const eagerState = lastRenderedReducer(currentState, action);`の部分で`eager（先行、即座などの意）`な state を計算している。
 
 ```tsx
 const queue: UpdateQueue<S, BasicStateAction<S>> = {
@@ -444,7 +479,8 @@ const queue: UpdateQueue<S, BasicStateAction<S>> = {
     lastRenderedReducer: basicStateReducer,
     lastRenderedState: (initialState: any),
   };
-```   
+```
+
 `lastRenderedReducer`を探すと、`queue`の初期化時に`basicStateReducer`が設定されている。
 
 ```tsx
@@ -453,10 +489,11 @@ function basicStateReducer<S>(state: S, action: BasicStateAction<S>): S {
   return typeof action === 'function' ? action(state) : action;
 }
 ```
-actionに関数が渡された場合はその関数を実行し、それ以外の場合はそのまま返すようになっている。
-ここで受け取っているactionは例えば`setUser({ id: 1, name: 'John Doe' });`の`{ id: 1, name: 'John Doe' }`のことを指している。
 
-流れとしては、set関数を実行したときに渡す値が`eagerState`となり、`is(eagerState, currentState)`の部分で`currentState`と違う値かどうかを判別し、違うと判断された場合にキューとして管理されているstateを更新し、再レンダリングを発生させる。
+action に関数が渡された場合はその関数を実行し、それ以外の場合はそのまま返すようになっている。
+ここで受け取っている action は例えば`setUser({ id: 1, name: 'John Doe' });`の`{ id: 1, name: 'John Doe' }`のことを指している。
+
+流れとしては、set 関数を実行したときに渡す値が`eagerState`となり、`is(eagerState, currentState)`の部分で`currentState`と違う値かどうかを判別し、違うと判断された場合にキューとして管理されている state を更新し、再レンダリングを発生させる。
 
 ```tsx
 const dispatch: Dispatch<BasicStateAction<S>> = (dispatchSetState.bind(
@@ -466,25 +503,26 @@ const dispatch: Dispatch<BasicStateAction<S>> = (dispatchSetState.bind(
   ): any);
 ```
 
-このタプルとしてセットされているdispatchに戻ると`dispatchSetState.bind`が使用されており、`dispatchSetState`では第3引数に`action`が渡されている。
-このactionはset関数を呼び出す時に渡される引数のことであり、先ほどの`basicStateReducer`に渡されている。
+このタプルとしてセットされている dispatch に戻ると`dispatchSetState.bind`が使用されており、`dispatchSetState`では第 3 引数に`action`が渡されている。
+この action は set 関数を呼び出す時に渡される引数のことであり、先ほどの`basicStateReducer`に渡されている。
 
-### set関数の再生成について結論
+### set 関数の再生成について結論
 
-以上から、最初の問いに対する答えとしては、set関数は`dispatch`として扱われている、コンポーネントの外にグローバルで定義されている決まった関数であるため、何らかの影響により再生成されるものではないということがわかった。
+以上から、最初の問いに対する答えとしては、set 関数は`dispatch`として扱われている、コンポーネントの外にグローバルで定義されている決まった関数であるため、何らかの影響により再生成されるものではないということがわかった。
 確かに、よく考えれば値を更新するだけの固定の関数になるはずである。
 
-##  参照情報
+## 参考情報
 
-https://github.com/facebook/react  
+https://github.com/facebook/react
 
-https://zenn.dev/yuta_ura/articles/react-context-api  
+https://ja.react.dev/reference/react/useContext  
 
-https://ja.react.dev/reference/react/useContext
+https://kentcdodds.com/blog/application-state-management-with-react
 
-
-[^1]: https://ja.react.dev/reference/react/useContext#caveats
-[^2]: 厳密にはオーバーロードの`function useState<S = undefined>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>]`もある
-[^3]: https://ja.react.dev/learn/keeping-components-pure#purity-components-as-formulas
-[^4]: https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHooks.js#L1920-L1932
-[^5]: https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders
+[^1]: [useContextの注意点](https://ja.react.dev/reference/react/useContext#caveats)
+[^2]: [オブジェクトや関数を渡すときの再レンダーの最適化](https://ja.react.dev/reference/react/useContext#optimizing-re-renders-when-passing-objects-and-functions)
+[^3]: [Unnecessary re-renders](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)
+[^4]: [How to optimize your context value](https://kentcdodds.com/blog/how-to-optimize-your-context-value)
+[^5]: 厳密にはオーバーロードの`function useState<S = undefined>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>]`もある
+[^6]: [純粋性：コンポーネントとは数式のようなもの](https://ja.react.dev/learn/keeping-components-pure#purity-components-as-formulas)
+[^7]: https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHooks.js#L1920-L1932

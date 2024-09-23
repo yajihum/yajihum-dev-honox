@@ -10,18 +10,18 @@
 
 .toc-link {
   @apply text-zinc-600 dark:text-zinc-300;
-}
 
-.toc-link:hover {
-  @apply text-zinc-600 dark:text-zinc-200 underline;
+  &:hover {
+    @apply text-zinc-600 dark:text-zinc-200 underline;
+  }
 }
 
 .footnotes a {
   color: #bdbdbd;
-}
 
-.footnotes a:hover {
-  color: #fff;
+  &:hover {
+    color: #fff;
+  }
 }
 
 p:has(> img) {
@@ -30,36 +30,44 @@ p:has(> img) {
 
 .link-card {
   @apply rounded-xl border border-zinc-200 bg-zinc-100 shadow shadow-zinc-200 transition-colors duration-300 my-4;
-}
 
-.link-card:hover {
-  @apply bg-zinc-50;
-}
+  &:hover {
+    @apply bg-zinc-50;
+  }
 
-.link-card a {
-  @apply grid grid-cols-1 gap-4 p-4 md:px-8 md:py-6;
+  a {
+    @apply grid grid-cols-1 gap-4 p-4 md:px-8 md:py-6;
+  }
 }
 
 .link-card-title {
   @apply grid grid-cols-1 gap-2;
-}
 
-.link-card-title p:first-child {
-  @apply m-0 text-sm md:text-base text-zinc-600;
-}
+  p:first-child {
+    @apply m-0 text-sm md:text-base text-zinc-600;
+  }
 
-.link-card-title p:last-child {
-  @apply m-0 line-clamp-2 text-xs text-zinc-500 md:text-sm;
+  p:last-child {
+    @apply m-0 line-clamp-2 text-xs text-zinc-500 md:text-sm;
+  }
 }
 
 .link-card-site {
   @apply flex items-center gap-2 md:gap-4;
+
+  img {
+    @apply w-5 flex-shrink-0;
+  }
+
+  p {
+    @apply text-xs text-zinc-500 md:text-sm;
+  }
 }
 
-.link-card-site img {
-  @apply !w-5 flex-shrink-0;
-}
+.note {
+  @apply p-4 md:p-6 text-base bg-green-400/20 text-green-800 dark:bg-green-900/40 dark:text-green-400 rounded-r shadow-sm border-l-4 border-green-300 dark:border-green-500;
 
-.link-card-site p {
-  @apply text-xs text-zinc-500 md:text-sm;
+  p {
+    @apply whitespace-pre-wrap my-0;
+  }
 }
