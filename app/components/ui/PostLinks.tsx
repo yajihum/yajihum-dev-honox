@@ -20,14 +20,14 @@ export const PostLinks = ({ posts, tag }: Props) => {
             class="flex flex-col gap-3 dark:text-zinc-300"
           >
             <div className="flex flex-col gap-2 text-sm">
-              <div className="flex items-center gap-1 text-sm text-zinc-600 dark:text-zinc-300">
+              <div className="flex items-center gap-1 text-sm text-zinc-600 dark:text-zinc-400">
                 <HeroiconsSvgWrapper className="h-4 w-4">
                   {SvgPaths.calendar}
                 </HeroiconsSvgWrapper>
                 <time>{module.frontmatter.pubDate}</time>
               </div>
               <a
-                className="cursor-pointer font-bold text-lg hover:underline"
+                className="cursor-pointer font-bold text-md md:text-lg hover:underline"
                 href={`/blog/posts/${tag}/${slug}`}
               >
                 {module.frontmatter.title}

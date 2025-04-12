@@ -19,7 +19,7 @@ export default createRoute((c) => {
           <h2 class="text-lg md:text-2xl" id={`${id}-about-me`}>
             yajihum / やじはむ
           </h2>
-          <p class="flex flex-col gap-1 text-zinc-600 dark:text-zinc-400">
+          <p class="flex flex-col gap-1 text-zinc-600 dark:text-zinc-300">
             <span className="block">
               I'm a frontend engineer working at COMPASS.
             </span>

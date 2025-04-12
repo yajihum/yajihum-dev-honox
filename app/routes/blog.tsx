@@ -13,8 +13,7 @@ export default createRoute((c) => {
   );
 
   return c.render(
-    <section class="grid grid-cols-1 gap-10 py-10" aria-labelledby="blog">
-      <H2 id="blog" title="Blog" />
+    <section class="grid grid-cols-1 gap-10 py-10">
       <PostLinks tag="tech" posts={getPublishedPosts(techPosts)} />
     </section>,
     {

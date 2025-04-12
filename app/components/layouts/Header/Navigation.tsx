@@ -7,8 +7,7 @@ export const Navigation: FC = ({ children }) => {
   const current = c.req.path;
   return (
     <>
-      <div className="block md:hidden">{children}</div>
-      <nav className="my-0.5 hidden items-end md:flex">
+      <nav className="my-0.5 flex items-end">
         <ul className="flex justify-items-center gap-6">
           {navigationLinks.map((link) => {
             return (
