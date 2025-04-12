@@ -27,7 +27,7 @@
     "@hono/vite-cloudflare-pages": "0.4.2",
     "@hono/vite-ssg": "0.1.2",
     "@tailwindcss/typography": "0.5.16",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "10.4.21",
     "front-matter": "4.0.2",
     "postcss": "8.5.3",
     "tailwindcss": "3.4.11",
