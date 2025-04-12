@@ -26,7 +26,7 @@
     "@cloudflare/workers-types": "4.20250410.0",
     "@hono/vite-cloudflare-pages": "0.4.2",
     "@hono/vite-ssg": "0.1.0",
-    "@tailwindcss/typography": "0.5.15",
+    "@tailwindcss/typography": "0.5.16",
     "autoprefixer": "10.4.20",
     "front-matter": "4.0.2",
     "postcss": "8.4.49",
