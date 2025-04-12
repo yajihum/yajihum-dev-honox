@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' source('../app');
+@plugin "@tailwindcss/typography";
 
 @media (prefers-color-scheme: dark) {
   :root {
