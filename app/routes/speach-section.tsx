@@ -1,15 +1,17 @@
-import { createRoute } from 'honox/factory';
 import type { OGP } from '../../plugins/remark';
 import { speakerDeckEmbeddings } from '../components/speacker-deck';
-import { H2Centered } from '../components/ui';
+import { H2 } from '../components/ui';
 import { SpeachSlideLink } from '../components/ui/SpeachSlideLink';
 import { linkcardEntryPoint } from '../lib/cloudflare';
+import { useId } from 'hono/jsx';
 
-type SpeachSlide = {
+interface SpeachSlide extends OGP {
   speakerDeckUrl: string;
-} & OGP;
+}
 
-export default createRoute(async (c) => {
+export const SpeachSection = async () => {
+  const id = useId();
+
   const speachSlides = await Promise.all(
     speakerDeckEmbeddings.map(async (speach) => {
       const res = await fetch(
@@ -19,7 +21,7 @@ export default createRoute(async (c) => {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       const slide: SpeachSlide = await res.json();
       return {
@@ -28,28 +30,22 @@ export default createRoute(async (c) => {
         eventName: speach.event,
         speakerDeckUrl: speach.speakerDeckUrl,
       };
-    }),
+    })
   );
 
-  return c.render(
-    <section class='grid grid-cols-1 gap-20' aria-labelledby='speach-slides'>
-      <H2Centered id='speach-slides' title='Speach slides' />
-      <div class='grid grid-cols-1 gap-10'>
-        {speachSlides.map(async (slide) => {
-          return (
-            <SpeachSlideLink
-              title={slide.title}
-              ogImageUrl={slide.ogImageUrl}
-              eventName={slide.eventName}
-              speakerDeckUrl={slide.speakerDeckUrl}
-            />
-          );
-        })}
+  return (
+    <section class="grid grid-cols-1 gap-6" aria-labelledby={id}>
+      <H2 id={id} title="Speach" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {speachSlides.map((slide) => (
+          <SpeachSlideLink
+            title={slide.title}
+            ogImageUrl={slide.ogImageUrl}
+            eventName={slide.eventName}
+            speakerDeckUrl={slide.speakerDeckUrl}
+          />
+        ))}
       </div>
-    </section>,
-    {
-      title: 'Speach slides',
-      description: 'Speach slides that Yajihum has presented.',
-    },
+    </section>
   );
-});
+};

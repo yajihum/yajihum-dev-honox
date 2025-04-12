@@ -7,9 +7,9 @@ export const Navigation: FC = ({ children }) => {
   const current = c.req.path;
   return (
     <>
-      <div className='block md:hidden'>{children}</div>
-      <nav className='my-0.5 hidden items-end md:flex'>
-        <ul className='grid grid-cols-4 justify-items-center gap-4'>
+      <div className="block md:hidden">{children}</div>
+      <nav className="my-0.5 hidden items-end md:flex">
+        <ul className="flex justify-items-center gap-6">
           {navigationLinks.map((link) => {
             return (
               <li key={link.name}>
@@ -17,11 +17,11 @@ export const Navigation: FC = ({ children }) => {
                   href={link.href}
                   class={
                     current === link.href
-                      ? 'text-green-500 dark:text-green-300'
-                      : ''
+                      ? 'text-blue-500 dark:text-blue-300'
+                      : 'hover:underline underline-offset-2'
                   }
                 >
-                  <p className='text-sm'>{link.name}</p>
+                  <p className="text-md">{link.name}</p>
                 </a>
               </li>
             );

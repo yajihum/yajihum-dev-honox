@@ -32,42 +32,20 @@ const works: Work[] = [
 
 export const WorksCards = () => {
   return (
-    <ul class='grid grid-cols-1 gap-6 md:grid-cols-2'>
+    <ul class="grid grid-cols-1 gap-6">
       {works.map((work) => (
-        <li
-          key={work.name}
-          class='rounded-xl border border-zinc-200 bg-zinc-100 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 hover:bg-zinc-50 dark:shadow-none'
-        >
+        <li key={work.name}>
           <a
             href={work.url}
-            target='_blank'
-            class='grid grid-cols-1 gap-1'
-            rel='noreferrer'
+            target="_blank"
+            class="grid grid-cols-1 gap-1 hover:underline underline-offset-2 text-md"
+            rel="noreferrer"
           >
-            <div class=''>
-              <img
-                src={work.image}
-                alt={work.name}
-                class='h-52 w-full rounded-t-xl'
-              />
-            </div>
-            <section class='grid grid-cols-1 gap-6 p-4 text-center'>
-              <section class='grid grid-cols-1 gap-1'>
-                <p class='font-bold text-lg'>{work.name}</p>
-                <p class='text-sm text-zinc-400'>{work.description}</p>
-              </section>
-              <ul class='flex justify-center gap-2'>
-                {work.technologies.map((technology) => (
-                  <li
-                    key={technology}
-                    class='rounded-md bg-green-200/20 px-3 py-1 font-bold text-green-500 text-sm dark:bg-green-900/30 dark:text-green-300'
-                  >
-                    {technology}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {work.name}
           </a>
+          <p class="text-sm text-zinc-400 hover:no-underline">
+            {work.description}
+          </p>
         </li>
       ))}
     </ul>
