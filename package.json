@@ -23,7 +23,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250410.0",
+    "@cloudflare/workers-types": "4.20250412.0",
     "@hono/vite-cloudflare-pages": "0.4.2",
     "@hono/vite-ssg": "0.1.0",
     "@tailwindcss/typography": "0.5.16",
