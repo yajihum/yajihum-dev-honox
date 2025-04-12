@@ -15,11 +15,11 @@ export const H2WithId = ({ id, title, children, hasBorder = false }: Props) => {
       id={id}
       class={cx(
         'h2-hover relative flex scroll-mt-20 items-center gap-1 font-bold text-${textPosition} text-lg md:gap-0 md:text-2xl',
-        borderClass,
+        borderClass
       )}
     >
-      <a id={id} href={`#${id}`} class='md:-left-7 md:absolute'>
-        <HeroiconsSvgWrapper className='hover-opacity h-6 w-6 text-emerald-500 transition-opacity duration-200 md:opacity-0'>
+      <a id={id} href={`#${id}`} class="md:-left-7 md:absolute">
+        <HeroiconsSvgWrapper className="hover-opacity h-6 w-6 text-emerald-500 transition-opacity duration-200 md:opacity-0">
           {SvgPaths.hashtag}
         </HeroiconsSvgWrapper>
       </a>
@@ -29,17 +29,15 @@ export const H2WithId = ({ id, title, children, hasBorder = false }: Props) => {
   );
 };
 
-type H2CenteredProps = {
+type H2Props = {
   title: string;
   id: string;
 };
 
-export const H2Centered = ({ title, id }: H2CenteredProps) => {
+export const H2 = ({ title, id }: H2Props) => {
   return (
-    <h2 id={id} class='text-center text-lg dark:text-zinc-200 md:text-2xl'>
-      <span class='border-zinc-600 border-b py-2 dark:border-zinc-300'>
-        {title}
-      </span>
+    <h2 id={id} class="text-md text-zinc-600 dark:text-zinc-200 md:text-xl">
+      {title}
     </h2>
   );
 };

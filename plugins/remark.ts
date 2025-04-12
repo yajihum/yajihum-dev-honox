@@ -29,7 +29,7 @@ const createObject = (
   value: string,
   url?: string,
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  children?: any[],
+  children?: any[]
 ) => ({
   type,
   url,
@@ -42,7 +42,6 @@ const createObject = (
 });
 
 export const remarkLinkCard = () => async (tree: Root) => {
-
   // リンクカードの作成
   const promises: Promise<void>[] = [];
   visit(tree, 'paragraph', (paragraph, index, parent) => {
@@ -149,12 +148,11 @@ export const remarkLinkCard = () => async (tree: Root) => {
           ],
         };
       })
-      .catch(() => { });
+      .catch(() => {});
     promises.push(promise);
   });
 
   await Promise.all(promises);
-
 
   // noteの作成
   visit(tree, 'paragraph', (paragraph, index, parent) => {

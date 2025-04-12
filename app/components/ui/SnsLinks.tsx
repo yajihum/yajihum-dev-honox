@@ -6,7 +6,6 @@ type SnsLink = {
   url: string;
   icon: Child;
   userName: string;
-  fill?: string;
 };
 
 const snsLinks: SnsLink[] = [
@@ -27,43 +26,35 @@ const snsLinks: SnsLink[] = [
     url: 'https://zenn.dev/rorisutarou',
     icon: SvgPaths.zenn,
     userName: '@rorisutarou',
-    fill: 'fill-blue-500',
   },
   {
     name: 'Speaker Deck',
     url: 'https://speakerdeck.com/yajihum',
     icon: SvgPaths.speakerDeck,
     userName: '@yajihum',
-    fill: 'fill-teal-600',
-  },
-  {
-    name: 'Instagram',
-    url: 'https://www.instagram.com/yajihum',
-    icon: SvgPaths.instagram,
-    userName: '@yajihum',
-    fill: 'fill-pink-500',
   },
 ];
 
 export const SnsLinks = () => {
   return (
-    <ul className='mx-auto grid max-w-sm grid-cols-1 gap-2 md:max-w-4xl md:grid-cols-3'>
-      {snsLinks.map((link, index) => (
+    <ul className="grid grid-cols-1 gap-2">
+      {snsLinks.map((link) => (
         <li key={link.name}>
           <a
             href={link.url}
-            target='_blank'
-            rel='noreferrer'
-            className='flex items-center gap-4 rounded-lg p-2 md:gap-3 dark:hover:bg-inherit hover:bg-zinc-100'
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-4 rounded-lg md:gap-3 hover:underline underline-offset-2 w-fit"
           >
             <SnsSvgWrapper
-              className={`h-12 w-12 rounded-md dark:bg-white p-1.5 ${link.fill}`}
+              className="h-10 w-10 rounded-md p-2"
+              fill="currentColor"
             >
               {link.icon}
             </SnsSvgWrapper>
-            <div className='grid grid-cols-1 items-center text-left'>
-              <p className='text-sm'>{link.name}</p>
-              <p className='text-sm text-zinc-400'>{link.userName}</p>
+            <div className="flex gap-2 items-baseline">
+              <p className="text-md">{link.name}</p>
+              <p className="text-sm text-zinc-400">{link.userName}</p>
             </div>
           </a>
         </li>

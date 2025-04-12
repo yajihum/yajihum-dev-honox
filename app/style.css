@@ -8,18 +8,18 @@
 }
 
 .toc-link {
-  @apply text-zinc-600 dark:text-zinc-300;
+  @apply text-zinc-800 dark:text-zinc-300;
 
   &:hover {
-    @apply text-zinc-600 dark:text-zinc-200 underline;
+    @apply text-zinc-800 dark:text-zinc-200 underline;
   }
 }
 
 .footnotes a {
-  color: #bdbdbd;
+  @apply text-zinc-600 dark:text-zinc-300;
 
   &:hover {
-    color: #fff;
+    @apply text-zinc-800 dark:text-zinc-100 underline;
   }
 }
 
@@ -43,11 +43,11 @@ p:has(> img) {
   @apply grid grid-cols-1 gap-2;
 
   p:first-child {
-    @apply m-0 text-sm md:text-base text-zinc-600;
+    @apply m-0 text-sm md:text-base text-zinc-800;
   }
 
   p:last-child {
-    @apply m-0 line-clamp-2 text-xs text-zinc-500 md:text-sm;
+    @apply m-0 line-clamp-2 text-xs text-zinc-700 md:text-sm;
   }
 }
 
@@ -59,12 +59,12 @@ p:has(> img) {
   }
 
   p {
-    @apply text-xs text-zinc-500 md:text-sm;
+    @apply text-xs text-zinc-700 md:text-sm;
   }
 }
 
 .note {
-  @apply p-4 md:p-6 text-base bg-green-400/20 text-green-800 dark:bg-green-900/40 dark:text-green-400 rounded-r shadow-sm border-l-4 border-green-300 dark:border-green-500;
+  @apply p-4 md:p-6 text-base bg-blue-50 text-blue-500 dark:bg-blue-900/20 dark:text-blue-300 border rounded-lg border-blue-400 dark:border-blue-400;
 
   p {
     @apply whitespace-pre-wrap my-0;
