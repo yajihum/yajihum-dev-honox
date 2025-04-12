@@ -3,7 +3,6 @@ import ssg from '@hono/vite-ssg';
 import rehypeToc from '@jsdevtools/rehype-toc';
 import mdx from '@mdx-js/rollup';
 import honox from 'honox/vite';
-import client from 'honox/vite/client';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkFrontmatter from 'remark-frontmatter';
@@ -12,15 +11,18 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vite';
 import type { Toc, TocChildren } from './app/types';
 import { remarkLinkCard } from './plugins/remark';
+import tailwindcss from '@tailwindcss/vite';
+import build from '@hono/vite-build/cloudflare-pages';
 
 const entry = './app/server.ts';
 
+/** @type {import('rehype-pretty-code').Options} */
 const rehypePrettyCodeOptions = {
   grid: false,
   theme: 'poimandres',
   transformers: [
     {
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny
       code(node: any) {
         node.properties = {
           className: 'not-prose',
@@ -53,25 +55,15 @@ const tocOptions = {
 };
 
 export default defineConfig(({ mode }) => {
-  if (mode === 'client') {
-    return {
-      build: {
-        rollupOptions: {
-          input: ['./app/style.css'],
-          output: {
-            assetFileNames: 'static/assets/[name].[ext]',
-          },
-        },
-      },
-      plugins: [client()],
-    };
-  }
   return {
-    build: {
-      emptyOutDir: false,
-    },
     plugins: [
-      honox(),
+      honox({
+        client: {
+          input: ['/app/style.css'],
+        },
+      }),
+      build(),
+      tailwindcss(),
       pages(),
       mdx({
         jsxImportSource: 'hono/jsx',
