@@ -27,7 +27,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
                 <time>{module.frontmatter.pubDate}</time>
               </div>
               <a
-                className="cursor-pointer font-bold text-md md:text-xl hover:underline"
+                className="cursor-pointer font-bold text-lg md:text-xl hover:underline"
                 href={`/blog/posts/${tag}/${slug}`}
               >
                 {module.frontmatter.title}
