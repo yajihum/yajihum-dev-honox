@@ -36,7 +36,7 @@ type H2Props = {
 
 export const H2 = ({ title, id }: H2Props) => {
   return (
-    <h2 id={id} class="text-md text-zinc-600 dark:text-zinc-200 md:text-xl">
+    <h2 id={id} class="text-xl text-zinc-600 dark:text-zinc-200 md:text-3xl">
       {title}
     </h2>
   );

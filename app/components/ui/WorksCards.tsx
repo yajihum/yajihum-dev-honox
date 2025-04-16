@@ -43,7 +43,7 @@ export const WorksCards = () => {
           >
             {work.name}
           </a>
-          <p class="text-sm text-zinc-400 dark:text-zinc-300 hover:no-underline">
+          <p class="text-sm text-zinc-500 dark:text-zinc-300 hover:no-underline">
             {work.description}
           </p>
         </li>

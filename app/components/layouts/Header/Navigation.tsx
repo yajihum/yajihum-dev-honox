@@ -16,7 +16,7 @@ export const Navigation: FC = ({ children }) => {
                   href={link.href}
                   class={
                     current === link.href
-                      ? 'text-blue-500 dark:text-blue-300'
+                      ? 'font-bold'
                       : 'hover:underline underline-offset-2'
                   }
                 >

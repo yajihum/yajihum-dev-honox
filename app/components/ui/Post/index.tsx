@@ -19,22 +19,15 @@ export const Post: FC<Props> = ({ tag, children, frontmatter }: Props) => {
   const slug = current.split('/').pop();
 
   return (
-    <div className="grid grid-cols-1 gap-28 py-4 md:py-8">
-      <div className="flex flex-col gap-6 md:gap-8">
-        <img
-          src={`${emojiDomain}${icon}.png`}
-          alt="絵文字アイコン"
-          className="h-16 w-16"
-        />
-        <section className="grid grid-cols-1 gap-2 md:gap-6">
-          <h1 className="font-semibold text-xl md:text-3xl">{title}</h1>
-          <div className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-300 md:text-sm">
-            <HeroiconsSvgWrapper className="h-4 w-4">
-              {SvgPaths.calendar}
-            </HeroiconsSvgWrapper>
-            <time>{pubDate}</time>
-          </div>
-        </section>
+    <div className="grid grid-cols-1 gap-28 py-4 md:py-10">
+      <div className="grid grid-cols-1 gap-2 md:gap-4">
+        <div className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-400 md:text-base">
+          <HeroiconsSvgWrapper className="h-4 w-4">
+            {SvgPaths.calendar}
+          </HeroiconsSvgWrapper>
+          <time>{pubDate}</time>
+        </div>
+        <h1 className="font-semibold text-xl md:text-3xl">{title}</h1>
       </div>
 
       <section className="rounded-xl p-1">

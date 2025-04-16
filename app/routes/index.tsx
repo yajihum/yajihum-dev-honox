@@ -12,11 +12,16 @@ export default createRoute((c) => {
         class="grid grid-cols-1 place-items-stretch gap-10"
         aria-labelledby={`${id}-about-me`}
       >
-        <div class="h-16 w-16 rounded-full p-2">
-          <img src="https://images.site.yajihum.dev/rorisu.png" alt="Icon" />
+        <div class="size-28 md:size-36 rounded-full p-2">
+          <img
+            src="https://images.site.yajihum.dev/rorisu.png"
+            alt="Icon"
+            width={144}
+            height={144}
+          />
         </div>
         <div class="flex flex-col gap-6">
-          <h2 class="text-lg md:text-2xl" id={`${id}-about-me`}>
+          <h2 class="text-2xl md:text-3xl" id={`${id}-about-me`}>
             yajihum / やじはむ
           </h2>
           <p class="flex flex-col gap-1 text-zinc-600 dark:text-zinc-300">

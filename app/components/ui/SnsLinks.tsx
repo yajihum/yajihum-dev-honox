@@ -53,8 +53,10 @@ export const SnsLinks = () => {
               {link.icon}
             </SnsSvgWrapper>
             <div className="flex gap-2 items-baseline">
-              <p className="text-md">{link.name}</p>
-              <p className="text-sm text-zinc-400">{link.userName}</p>
+              <p>{link.name}</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 md:text-base">
+                {link.userName}
+              </p>
             </div>
           </a>
         </li>
