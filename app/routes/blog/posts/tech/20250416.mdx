@@ -1,0 +1,321 @@
+---
+title: 'MaestroとMSWを使用したReact Nativeの結合テストを書く'
+description: '一般的なReact Nativeでの結合テストはJestとTesting Libraryを使用することが一般的だと思うが、今回はMaestroとMSWを使用して結合テストを書いてみる。'
+published: true
+pubDate: '2025/04/17 00:48'
+tag: 'tech'
+icon: 'animals-and-nature/72'
+---
+
+## はじめに
+
+最近会社で React Native のアプリを作成していて、リグレッション時の不具合発生を防ぐためにも初期段階からテストを書いておきたいと思っていた。
+個人的に Jest と Testing Library を使用したテストはあまり好きではないため、比較的導入しやすい Maestro で結合テストを書くことにした。
+
+## なぜ Maestro と MSW か
+
+Maestro はモバイルアプリ開発でよく使われている E2E テストフレームワークで、React Native のテストにも対応している。
+特に書き方が簡単で分かりやすく、シミュレータを起動させればすぐにテストを実行でき、どこをどうやってテストをしているかを目視できるのも嬉しい。  
+最初のとっかかりとしては結合テストを書かずに Maestro で E2E を書いてもいいのだが、どうしても iOS はシミュレータ上でのテストになり実機では難しいことや CI などで自動化するには有料のクラウドサービスを利用する必要があることなどから、完全な E2E の代替としては難しいと判断し、フロントエンドの開発内の結合テストとして使用することにした。
+
+ちなみに Vitest のブラウザモードのように DOM を操作しないテストが書ければいいのだが Vitest は公式で React Native に対応していないため諦めた。Jest は ESM の解決が大変そうなので使いたくない。
+
+結合テストであれば、テスト対象の API をモックして幕等性を担保できる方がいいので、MSW を使用する。
+MSW は自分が使い慣れている＆フロントエンドの開発者であればテスト時に大体使ったことがあると思うので MSW を使用することにした。
+
+## テスト対象について
+
+ビルド済みアプリを使用してテストもできるが、開発初期段階の今はあまり開発コストをかけたくないため development build を使用しておらず Expo Go を使用して動かすことにした。
+
+## Maestro の設定
+
+一例としてログイン〜ログアウトのフローをテストを以下のように書いた。  
+appId と openLink は Expo Go の場合のみ指定する。
+openLink は localhost で起動させているものにしている。（--tunnel を付与して立ち上げたものだと起動が遅くテストのタイムアウトになってしまうため）
+
+```yaml
+## ログインとログアウトのテスト
+
+appId: host.exp.Exponent # Expo Goの場合
+env:
+  LOGIN_ID: loginId
+  PASSWORD: password1234
+---
+# localhostで起動しているアプリに直接接続する
+- openLink: exp://127.0.0.1:8081
+
+# ログインボタンをタップ
+- tapOn: 'ログイン'
+
+# バリデーションチェック
+# トップ画面とは違う2つめのログインボタンを取得
+- tapOn:
+    text: 'ログイン'
+    index: 1
+- assertVisible: 'ログインIDは必須入力です'
+- assertVisible: 'パスワードは必須入力です'
+
+# 間違ったログイン情報を入力
+- tapOn: 'ログインID'
+- inputText: 'a'
+- tapOn: 'パスワード'
+- inputText: 'pass'
+- tapOn:
+    text: 'ログイン'
+    index: 1
+- assertVisible: 'ログインできませんでした'
+
+# 正しいログイン情報を入力
+- tapOn: 'ログインID'
+- eraseText
+- inputText: '${LOGIN_ID}'
+- tapOn: 'パスワード'
+- eraseText
+- inputText: '${PASSWORD}'
+
+# フォーム送信のログインボタンをタップ
+# トップ画面とは違う2つめのログインボタンを取得
+- tapOn:
+    text: 'ログイン'
+    index: 1
+
+# iOS:SystemのSavePasswordのアラートを閉じる
+- runFlow:
+    when:
+      visible: 'Save Password'
+    commands:
+      - tapOn: 'Not now'
+
+# ホーム画面に遷移し、設定ボタンをタップ
+- tapOn: '設定'
+- tapOn: 'アカウント情報'
+- tapOn: 'ログアウト'
+- assertVisible: 'ログアウトしますか？'
+- tapOn:
+    text: 'ログアウト'
+    index: 1
+
+# トップ画面に遷移していることを確認
+- assertVisible: 'ログイン'
+```
+
+各パターンのバリデーションチェックも行っている。
+
+## MSW の設定
+
+React Native で MSW を使用する場合は少しコツがいるようで、[公式ドキュメント](https://mswjs.io/docs/integrations/react-native/)のままやってもダメだった。
+
+### ポリフィルの設定
+
+React Native 上で動かすのにポリフィルの設定が必要であり、ライブラリをインストールするようにドキュメントにあるのだが、`MessageEvent`がないよというエラーが出るので AI に聞いてカスタムの Event 実装をしたら解決できた。
+
+```js apps/renraku/msw.polyfills.js
+class SimpleEventTarget {
+  constructor() {
+    this._listeners = {};
+  }
+
+  addEventListener(type, callback) {
+    if (!this._listeners[type]) {
+      this._listeners[type] = [];
+    }
+    this._listeners[type].push(callback);
+  }
+
+  removeEventListener(type, callback) {
+    if (!this._listeners[type]) return;
+    const index = this._listeners[type].indexOf(callback);
+    if (index !== -1) {
+      this._listeners[type].splice(index, 1);
+    }
+  }
+
+  dispatchEvent(event) {
+    if (!this._listeners[event.type]) return true;
+    const callbacks = [...this._listeners[event.type]];
+    for (const callback of callbacks) {
+      callback.call(this, event);
+    }
+    return !event.defaultPrevented;
+  }
+}
+
+// 簡易的なEventの実装
+class SimpleEvent {
+  constructor(type, eventInitDict = {}) {
+    this.type = type;
+    this.bubbles = eventInitDict.bubbles || false;
+    this.cancelable = eventInitDict.cancelable || false;
+    this.composed = eventInitDict.composed || false;
+    this.currentTarget = null;
+    this.defaultPrevented = false;
+    this.eventPhase = 0;
+    this.isTrusted = false;
+    this.target = null;
+    this.timeStamp = Date.now();
+  }
+
+  preventDefault() {
+    if (this.cancelable) {
+      this.defaultPrevented = true;
+    }
+  }
+
+  stopPropagation() {
+    // 実装は不要
+  }
+
+  stopImmediatePropagation() {
+    // 実装は不要
+  }
+}
+
+// 必要なグローバルオブジェクトを定義
+global.EventTarget = SimpleEventTarget;
+global.Event = SimpleEvent;
+
+// MessageEventが存在しない場合はポリフィル
+if (typeof MessageEvent === 'undefined') {
+  global.MessageEvent = class MessageEvent extends SimpleEvent {
+    constructor(type, options = {}) {
+      super(type, options);
+      this.data = options.data || null;
+      this.origin = options.origin || '';
+      this.lastEventId = options.lastEventId || '';
+      this.source = options.source || null;
+      this.ports = options.ports || [];
+    }
+  };
+}
+
+// BroadcastChannelが存在しない場合はポリフィル
+if (typeof BroadcastChannel === 'undefined') {
+  global.BroadcastChannel = class BroadcastChannel extends SimpleEventTarget {
+    constructor(channelName) {
+      super();
+      this.channelName = channelName;
+      this._subscribers = [];
+    }
+    postMessage(message) {
+      const event = new global.MessageEvent('message', {
+        data: message,
+      });
+      setTimeout(() => {
+        this.dispatchEvent(event);
+      }, 0);
+    }
+    close() {
+      this._subscribers = [];
+    }
+  };
+}
+
+export default {};
+```
+
+[同じエラーに遭遇して解決していた方の記事](https://velog.io/@gs0428/React-Native%EC%97%90%EC%84%9C-MSW-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)だと以下のように書いているので、これでもいけるかもしれない。
+
+```js
+import 'fast-text-encoding';
+import 'react-native-url-polyfill/auto';
+
+function defineMockGlobal(name) {
+  if (typeof global[name] === 'undefined') {
+    global[name] = class {
+      constructor(type, eventInitDict) {
+        this.type = type;
+        Object.assign(this, eventInitDict);
+      }
+    };
+  }
+}
+
+['MessageEvent', 'Event', 'EventTarget', 'BroadcastChannel'].forEach(
+  defineMockGlobal
+);
+```
+
+### server インスタンスの作成
+
+以下のように`msw/native`から setupServer をインポートする。
+返り値の型が`msw/native`にはなかったので`msw/node`の型を使用しているが、`boundary`がないというエラーが出るので Omit している。
+
+```ts server.ts
+import { setupServer } from 'msw/native';
+import type { SetupServer } from 'msw/node';
+import { handlers } from './handlers';
+
+export const server: Omit<SetupServer, 'boundary'> = setupServer(...handlers);
+```
+
+### `Property 'Document' doesn't exist`のエラー
+
+この状態で試すと`Property 'Document' doesn't exist`のエラーが出る。[Document](https://developer.mozilla.org/ja/docs/Web/API/Document)はブラウザ固有のオブジェクトなので、React Native 上にはないため発生する。  
+なぜ Document が出てくるかというと、今回 axios を使用したリクエストを行っており、axios ではデフォルトで`XMLHttpRequest`を使用した非同期通信の設定になっている。この`XMLHttpRequest`になっていることで MSW の処理上で`Document`が必要になり、エラーになるようだ。[^1]
+
+そこで、axios で`adapter`を`fetch`に変えることでこれを回避できる。
+
+```ts
+const AXIOS_INSTANCE = Axios.create({
+  adapter: 'fetch',
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+});
+```
+
+### セットアップを追加
+
+以下の`setupMsw`関数を作成する。`EXPO_PUBLIC_USE_MSW`という環境変数が`true`の場合に MSW のセットアップを行い、それ以外の場合は通常の API リクエストを行う。
+
+```ts lin/msw.ts
+export async function setupMSW() {
+  if (process.env.EXPO_PUBLIC_USE_MSW !== 'true') return;
+
+  await import('../../msw.polyfills');
+  const { server } = await import('../mocks/server');
+  server.listen();
+}
+```
+
+この関数を`app/_layout.tsx`で呼び出す。
+
+```tsx app/_layout.tsx
+import { Slot } from 'expo-router';
+import { setupMSW } from '../lib/msw';
+
+setupMSW();
+
+function RootLayout() {
+  return <Slot />;
+}
+```
+
+## テストの実行
+
+package.json の scripts に以下を追加する。環境変数で MSW を有効化している。
+
+```json package.json
+"scripts": {
+  "yarn start-test": "EXPO_PUBLIC_USE_MSW=true npx expo start --localhost",
+  "test": "maestro test .maestro/run-all-flow.yaml"
+}
+```
+
+`yarn start-test`を実行して Expo Go を起動してサーバーに接続した状態で`yarn test`を実行する。
+`run-all-flow.yaml`は Maestro のテストファイルで、すべてのテストフローを集めたものである。
+
+## 運用について
+
+コストをかけたくないため今は Maestro のクラウドサービスは利用せず、ローカル上で実行するだけにとどまっている。  
+一応 GitHub Actions 上で runner を macOS にすれば自動化できそうだが、ubuntu よりもコストが高いことなどからあまり頻繁に実行したくないため、使っていない。
+
+## 終わりに
+
+まだテストを追加し始めたばかりで実際にすべてのテストを書いたときの実行時間などはわからないので、Jest で書いた時とのデメリットなどはこれから検証していきたい。
+
+## 参考記事
+
+https://velog.io/@gs0428/React-Native%EC%97%90%EC%84%9C-MSW-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
+
+https://techblog.reazon.jp/entry/2024/07/12/125024
+
+[^1]: [MSW の XMLHttpRequest 処理](https://github.com/mswjs/interceptors/blob/main/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts#L542-L570)
