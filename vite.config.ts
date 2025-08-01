@@ -1,4 +1,3 @@
-import pages from '@hono/vite-cloudflare-pages';
 import ssg from '@hono/vite-ssg';
 import rehypeToc from '@jsdevtools/rehype-toc';
 import mdx from '@mdx-js/rollup';
@@ -64,7 +63,6 @@ export default defineConfig(({ mode }) => {
       }),
       build(),
       tailwindcss(),
-      pages(),
       mdx({
         jsxImportSource: 'hono/jsx',
         remarkPlugins: [
