@@ -1,15 +1,31 @@
 import type { FC } from 'hono/jsx';
-import { Navigation } from './Navigation';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { navigationLinks } from './data';
 
-export const Header: FC = ({ children }) => {
+export const Header: FC = () => {
+  const c = useRequestContext();
+  const current = c.req.path;
+
   return (
-    <header className="py-4 transition-colors dark:bg-zinc-950/60">
-      <div className="mx-auto flex max-w-3xl items-baseline justify-between px-4 md:px-0">
-        <a href="/" className="hover:underline text-xl">
-          yajihum.dev
-        </a>
-        <Navigation>{children}</Navigation>
-      </div>
+    <header>
+      <nav className="flex justify-end max-w-3xl mx-auto px-4 lg:px-0">
+        <ul className="flex justify-items-center gap-6 py-6">
+          {navigationLinks.map((link) => (
+            <li key={link.name}>
+              <a
+                href={link.href}
+                class={
+                  current === link.href
+                    ? 'font-bold'
+                    : 'text-zinc-600 dark:text-zinc-400'
+                }
+              >
+                <p className="text-md">{link.name}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 };

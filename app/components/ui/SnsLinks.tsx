@@ -37,27 +37,18 @@ const snsLinks: SnsLink[] = [
 
 export const SnsLinks = () => {
   return (
-    <ul className="grid grid-cols-1 gap-2">
+    <ul className="flex gap-6">
       {snsLinks.map((link) => (
-        <li key={link.name}>
+        <li key={link.name} className="my-auto">
           <a
             href={link.url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-4 rounded-lg md:gap-3 hover:underline underline-offset-2 w-fit"
+            className="flex items-center gap-4"
           >
-            <SnsSvgWrapper
-              className="h-10 w-10 rounded-md p-2"
-              fill="currentColor"
-            >
+            <SnsSvgWrapper className="h-6 w-6" fill="currentColor">
               {link.icon}
             </SnsSvgWrapper>
-            <div className="flex gap-2 items-baseline">
-              <p>{link.name}</p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 md:text-base">
-                {link.userName}
-              </p>
-            </div>
           </a>
         </li>
       ))}
