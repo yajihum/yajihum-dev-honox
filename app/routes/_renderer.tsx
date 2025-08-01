@@ -1,8 +1,6 @@
 import { jsxRenderer } from 'hono/jsx-renderer';
-
 import { HasIslands, Link, Script } from 'honox/server';
 import { Container } from '../components/layouts/Container';
-import { Footer } from '../components/layouts/Footer';
 import { Header } from '../components/layouts/Header';
 import { Layout } from '../components/layouts/Layout';
 import IslandSideBar from '../islands/sideBar';
@@ -35,11 +33,8 @@ export default jsxRenderer(({ children, title, description }) => {
       </head>
       <body>
         <Layout>
-          <Header>
-            <IslandSideBar />
-          </Header>
+          <Header />
           <Container>{children}</Container>
-          <Footer />
         </Layout>
       </body>
     </html>

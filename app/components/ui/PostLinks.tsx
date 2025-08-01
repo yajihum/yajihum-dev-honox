@@ -34,7 +34,7 @@ export const PostLinks = ({ posts, tag }: Props) => {
               </a>
             </div>
 
-            <p className="line-clamp-2 text-sm text-zinc-800 dark:text-zinc-300">
+            <p className="line-clamp-2 text-sm text-zinc-800 dark:text-zinc-400">
               {module.frontmatter.description}
             </p>
           </div>
