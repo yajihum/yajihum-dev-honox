@@ -7,7 +7,7 @@ export default createRoute((c) => {
   const id = useId();
 
   return c.render(
-    <div class="grid grid-cols-1 gap-24 py-14">
+    <div class="grid grid-cols-1 gap-10 py-10 lg:gap-24 lg:py-14">
       <h1 class="text-2xl md:text-3xl font-bold">Hello, I'm yajihum</h1>
 
       <div class="grid grid-cols-1 gap-14">

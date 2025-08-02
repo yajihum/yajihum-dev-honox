@@ -12,17 +12,16 @@ import type { Toc, TocChildren } from './app/types';
 import { remarkLinkCard } from './plugins/remark';
 import tailwindcss from '@tailwindcss/vite';
 import build from '@hono/vite-build/cloudflare-pages';
+import type { Options } from 'rehype-pretty-code';
 
 const entry = './app/server.ts';
 
-/** @type {import('rehype-pretty-code').Options} */
-const rehypePrettyCodeOptions = {
+const rehypePrettyCodeOptions: Options = {
   grid: false,
   theme: 'poimandres',
   transformers: [
     {
-      // biome-ignore lint/suspicious/noExplicitAny
-      code(node: any) {
+      code(node) {
         node.properties = {
           className: 'not-prose',
         };
@@ -73,7 +72,7 @@ export default defineConfig(({ mode }) => {
         ],
         rehypePlugins: [
           rehypeSlug,
-          [rehypeToc, tocOptions],
+          [rehypeToc as any, tocOptions],
           [rehypePrettyCode, rehypePrettyCodeOptions],
         ],
       }),

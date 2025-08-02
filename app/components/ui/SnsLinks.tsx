@@ -44,7 +44,7 @@ export const SnsLinks = () => {
             href={link.url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-4"
+            className="flex items-center gap-4 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
           >
             <SnsSvgWrapper className="h-6 w-6" fill="currentColor">
               {link.icon}
